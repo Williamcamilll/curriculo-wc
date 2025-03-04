@@ -32,24 +32,27 @@
         <div id="clock"></div>
     </header>
 
-    <!-- Robô Interativo com IA -->
-    <div id="robot-container">
-        <div id="robot">
-            <div class="head">
-                <div class="eyes">
-                    <div class="eye left"></div>
-                    <div class="eye right"></div>
-                </div>
-                <div class="mouth"></div>
+  <!-- Robô Interativo com IA -->
+<div id="robot-container" class="robot-container">
+    <div id="robot" class="robot">
+        <div class="head">
+            <div class="eyes">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
             </div>
-            <div class="body"></div>
+            <div class="mouth"></div>
         </div>
-        <div id="robot-chat">
-            <div id="robot-message">Olá! Posso ajudar em algo?</div>
-            <input type="text" id="user-input" placeholder="Digite sua pergunta...">
-            <button id="send-button">Enviar</button>
+        <div class="body"></div>
+    </div>
+    
+    <div id="robot-chat" class="robot-chat">
+        <div id="robot-message" class="robot-message">Olá! Posso ajudar em algo?</div>
+        <div id="user-input-container" class="input-container">
+            <input type="text" id="user-input" class="user-input" placeholder="Digite sua pergunta..." aria-label="Digite sua pergunta" />
+            <button id="send-button" class="send-button" aria-label="Enviar pergunta">Enviar</button>
         </div>
     </div>
+</div>
 
     <!-- Conteúdo Principal -->
     <main class="container">
