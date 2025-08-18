@@ -1,565 +1,291 @@
-/* scripts.js — WCC | robusto, acessível e sem bugs aparentes */
-/* eslint-disable no-console */
-(() => {
-  'use strict';
-
-  /* =========================================================
-     Helpers utilitários (seguros)
-  ========================================================= */
-  const $ = (sel, ctx = document) => ctx.querySelector(sel);
-  const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
-
-  const on = (el, ev, fn, opts) => el && el.addEventListener(ev, fn, opts);
-  const off = (el, ev, fn, opts) => el && el.removeEventListener(ev, fn, opts);
-
-  const debounce = (fn, wait = 200) => {
-    let t;
-    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
-  };
-
-  const throttle = (fn, limit = 200) => {
-    let inThrottle = false;
-    let lastArgs = null;
-    return function wrapped(...args) {
-      if (!inThrottle) {
-        fn.apply(this, args);
-        inThrottle = true;
-        setTimeout(() => {
-          inThrottle = false;
-          if (lastArgs) { wrapped.apply(this, lastArgs); lastArgs = null; }
-        }, limit);
-      } else lastArgs = args;
-    };
-  };
-
-  const prefersReduced = (() => {
-    try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
-    catch { return false; }
-  })();
-
-  const safeStorage = (() => {
-    try {
-      const ls = window.localStorage;
-      const testKey = '__wcc_test__';
-      ls.setItem(testKey, '1'); ls.removeItem(testKey);
-      return ls;
-    } catch { return { getItem: () => null, setItem: () => {}, removeItem: () => {} }; }
-  })();
-
-  const sanitize = (str) =>
-    String(str).replace(/[<>&"']/g, (c) => ({ '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;', "'":'&#39;' }[c]));
-
-  /* =========================================================
-     TOASTS acessíveis
-  ========================================================= */
-  const Toast = (() => {
-    let wrap = null;
-    const ensure = () => {
-      if (wrap) return;
-      wrap = document.createElement('div');
-      wrap.setAttribute('aria-live', 'polite');
-      wrap.style.cssText = `
-        position:fixed; right:16px; bottom:16px; z-index:9999;
-        display:grid; gap:10px; max-width:min(90vw,480px)
-      `;
-      document.body.appendChild(wrap);
-    };
-    const palette = {
-      success: 'linear-gradient(180deg,#16a34a,#15803d)',
-      error:   'linear-gradient(180deg,#ef4444,#b91c1c)',
-      info:    'linear-gradient(180deg,#334155,#0f172a)',
-      warn:    'linear-gradient(180deg,#f59e0b,#d97706)'
-    };
-    const show = (msg, type = 'info', timeout = 2800) => {
-      ensure();
-      const card = document.createElement('div');
-      card.setAttribute('role', 'status');
-      card.style.cssText = `
-        padding:12px 14px; border-radius:12px; color:#fff;
-        box-shadow:0 12px 28px rgba(0,0,0,.28);
-        font: 500 14px/1.45 var(--ff,system-ui);
-        backdrop-filter:saturate(120%) blur(6px);
-        border:1px solid var(--line,#1e2936);
-        background:${palette[type] || palette.info};
-        opacity:0; transform: translateY(10px);
-        transition: opacity .2s ease, transform .2s ease;
-      `;
-      card.textContent = String(msg);
-      wrap.appendChild(card);
-      requestAnimationFrame(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; });
-      setTimeout(() => {
-        card.style.opacity = '0'; card.style.transform = 'translateY(10px)';
-        setTimeout(() => card.remove(), 220);
-      }, timeout);
-    };
-    return { show };
-  })();
-
-  /* =========================================================
-     Scroll suave + destaque do link ativo
-  ========================================================= */
-  const initSmoothNav = () => {
-    const navLinks = $$('nav a[href^="#"]');
-    if (!navLinks.length) return;
-
-    const scrollToId = (id) => {
-      const target = document.querySelector(id);
-      if (!target) return;
-      const behavior = prefersReduced ? 'auto' : 'smooth';
-      try { target.scrollIntoView({ behavior, block: 'start' }); }
-      catch { location.hash = id; } // fallback
-      // atualiza hash sem empurrar histórico
-      try { history.replaceState(null, '', id); } catch {}
-    };
-
-    navLinks.forEach((a) => {
-      on(a, 'click', (e) => {
-        const href = a.getAttribute('href') || '';
-        if (!href.startsWith('#')) return;
-        e.preventDefault();
-        scrollToId(href);
-      });
-    });
-
-    // Destaque seção ativa
-    const map = new Map(navLinks.map(a => [a.getAttribute('href'), a]));
-    const setActive = (id) => {
-      map.forEach((link, key) => {
-        if (key === id) link.classList.add('active');
-        else link.classList.remove('active');
-      });
-    };
-
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const id = '#' + entry.target.id;
-          if (!map.has(id)) return;
-          if (entry.isIntersecting) setActive(id);
-        });
-      }, { rootMargin: '-45% 0px -50% 0px', threshold: 0.01 });
-
-      $$('.section[id]').forEach(sec => io.observe(sec));
-    } else {
-      // Fallback: por scroll
-      const sections = $$('.section[id]');
-      const handler = throttle(() => {
-        let current = null;
-        const pos = window.scrollY + window.innerHeight * 0.35;
-        sections.forEach((s) => {
-          const r = s.getBoundingClientRect();
-          const top = r.top + window.scrollY;
-          if (top <= pos) current = s.id;
-        });
-        if (current) setActive('#' + current);
-      }, 150);
-      on(window, 'scroll', handler, { passive: true });
-      handler();
-    }
-  };
-
-  /* =========================================================
-     Back-to-top (visível/invisível sem piscar)
-  ========================================================= */
-  const initBackToTop = () => {
-    const btn = $('.back-to-top');
-    if (!btn) return;
-
-    const show = () => {
-      btn.hidden = false;
-      btn.classList.add('visible');
-      btn.classList.remove('invisible');
-    };
-
-    const hide = () => {
-      btn.classList.add('invisible');
-      btn.classList.remove('visible');
-      setTimeout(() => { if (btn.classList.contains('invisible')) btn.hidden = true; }, 300);
-    };
-
-    const onScroll = throttle(() => {
-      window.scrollY > 600 ? show() : hide();
-    }, 120);
-
-    on(window, 'scroll', onScroll, { passive: true });
-    on(btn, 'click', () => window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' }));
-  };
-
-  /* =========================================================
-     Reveal suave das sections (sem inline bagunçado)
-  ========================================================= */
-  const initSectionReveal = () => {
-    const sections = $$('.section');
-    if (!sections.length) return;
-
-    // estado inicial via style — sem depender do CSS global
-    sections.forEach((sec) => {
-      sec.style.opacity = '0';
-      sec.style.transform = 'translateY(18px)';
-      sec.style.transition = prefersReduced ? 'none' : 'opacity .5s var(--easing), transform .5s var(--easing), box-shadow .5s var(--easing)';
-    });
-
-    if (!('IntersectionObserver' in window)) {
-      // fallback: revela tudo
-      sections.forEach((sec) => { sec.style.opacity = '1'; sec.style.transform = 'none'; });
-      return;
-    }
-
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-        io.unobserve(el);
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-
-    sections.forEach((sec) => io.observe(sec));
-  };
-
-  /* =========================================================
-     Relógio — America/Sao_Paulo
-  ========================================================= */
-  const initClock = () => {
-    const el = $('#clock');
-    if (!el) return;
-
-    let fmt;
-    try {
-      fmt = new Intl.DateTimeFormat('pt-BR', {
-        timeZone: 'America/Sao_Paulo',
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-      });
-    } catch {
-      fmt = { format: (d) => d.toLocaleTimeString('pt-BR') };
-    }
-
-    const tick = () => {
-      try { el.textContent = `${fmt.format(new Date())} — Brasília`; }
-      catch { el.textContent = ''; }
-    };
-    tick();
-    setInterval(tick, 1000);
-  };
-
-  /* =========================================================
-     Theme Switch (auto/dark/light/contrast) com persistência
-  ========================================================= */
-  const initThemeSwitch = () => {
-    const THEMES = ['auto', 'dark', 'light', 'contrast'];
-    const KEY = 'wcc-theme';
-    const html = document.documentElement;
-
-    const get = () => safeStorage.getItem(KEY) || 'auto';
-    const set = (v) => safeStorage.setItem(KEY, v);
-
-    const apply = (mode) => {
-      html.classList.remove('theme-dark', 'theme-light', 'theme-contrast', 'auto-theme');
-      switch (mode) {
-        case 'dark': html.classList.add('theme-dark'); break;
-        case 'light': html.classList.add('theme-light'); break;
-        case 'contrast': html.classList.add('theme-contrast'); break;
-        default: html.classList.add('auto-theme');
-      }
-    };
-
-    const mountBtn = () => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.title = 'Alternar tema';
-      btn.setAttribute('aria-label', 'Alternar tema');
-      btn.style.cssText = `
-        position: fixed; left: 16px; bottom: 16px; z-index: 1000;
-        padding: 10px 12px; border-radius: 999px; color:#fff;
-        background: linear-gradient(180deg, var(--accent,#0ea5e9), var(--accent-2,#0284c7));
-        border: 1px solid var(--line,#1e2936); cursor: pointer;
-        font: 600 14px/1 var(--ff,system-ui);
-        box-shadow: 0 10px 22px rgba(0,0,0,.18);
-      `;
-      const icon = document.createElement('span');
-      const label = document.createElement('span'); label.style.marginLeft = '6px';
-
-      const updateFace = () => {
-        const mode = get();
-        icon.textContent = mode === 'dark' ? '🌙' :
-                           mode === 'light' ? '☀️' :
-                           mode === 'contrast' ? '⚡' : '🖥️';
-        label.textContent = mode;
-      };
-      btn.append(icon, label);
-      document.body.appendChild(btn);
-
-      on(btn, 'click', () => {
-        const current = get();
-        const idx = THEMES.indexOf(current);
-        const next = THEMES[(idx + 1) % THEMES.length];
-        set(next); apply(next); updateFace();
-        Toast.show(`Tema: ${next}`, 'info');
-      });
-      updateFace();
-    };
-
-    apply(get());
-    // monta depois do DOM completo
-    if (document.readyState === 'loading') {
-      on(document, 'DOMContentLoaded', mountBtn, { once: true });
-    } else {
-      mountBtn();
-    }
-  };
-
-  /* =========================================================
-     Formulários (Contato & Feedback) — robustos
-  ========================================================= */
-  const initForms = () => {
-    const attach = (cfg) => {
-      const form = $(cfg.formSel);
-      const statusEl = $(cfg.statusSel);
-      if (!form || !statusEl) return;
-
-      const btn = form.querySelector('button[type="submit"]');
-      const hp = cfg.honeypotSel ? form.querySelector(cfg.honeypotSel) : null;
-
-      const setStatus = (msg, ok = true) => {
-        statusEl.textContent = msg;
-        statusEl.style.color = ok ? 'var(--accent-2,#22d3ee)' : '#ef4444';
-      };
-
-      const formToJSON = (formEl) => {
-        const data = {};
-        new FormData(formEl).forEach((v, k) => { data[k] = v; });
-        return data;
-      };
-
-      on(form, 'submit', async (e) => {
-        e.preventDefault();
-
-        // Honeypot
-        if (hp && hp.value) {
-          setStatus('Falha na validação.', false);
-          Toast.show('Falha na validação.', 'error');
-          return;
-        }
-
-        if (!form.checkValidity()) {
-          form.reportValidity?.();
-          setStatus('Verifique os campos obrigatórios.', false);
-          Toast.show('Campos obrigatórios faltando.', 'warn');
-          return;
-        }
-
-        // Envio
-        const originalLabel = btn ? btn.textContent : '';
-        if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
-        setStatus('Enviando...', true);
-
-        try {
-          // Envie como JSON (Formspree aceita quando Accept: application/json)
-          const payload = formToJSON(form);
-          // dica: inclua um campo para diferenciar formulários no mesmo endpoint
-          if (!payload.formName) payload.formName = cfg.formName || 'Contato';
-
-          const res = await fetch(cfg.endpoint, {
-            method: 'POST',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-
-          setStatus(cfg.successMsg, true);
-          Toast.show(cfg.toastSuccess || 'Enviado com sucesso!', 'success');
-          form.reset();
-        } catch (err) {
-          console.warn('Form error:', err);
-          setStatus(cfg.errorMsg, false);
-          Toast.show(cfg.toastError || 'Erro ao enviar.', 'error');
-        } finally {
-          if (btn) { btn.disabled = false; btn.textContent = originalLabel || 'Enviar'; }
-        }
-      });
-    };
-
-    // Contato
-    attach({
-      formSel: '#contact-form',
-      statusSel: '#form-status',
-      honeypotSel: '#company',
-      endpoint: 'https://formspree.io/f/mqazravp', // use endpoints distintos se quiser separar contato/feedback
-      formName: 'Contato',
-      successMsg: 'Obrigado pela sua mensagem!',
-      errorMsg: 'Ops! Algo deu errado, tente novamente.',
-      toastSuccess: 'Mensagem enviada. Retorno em breve.',
-      toastError: 'Não consegui enviar sua mensagem.'
-    });
-
-    // Feedback
-    attach({
-      formSel: '#feedback-form',
-      statusSel: '#feedback-status',
-      honeypotSel: '#website',
-      endpoint: 'https://formspree.io/f/mqazravp',
-      formName: 'Feedback',
-      successMsg: 'Obrigado pelo seu feedback!',
-      errorMsg: 'Ops! Algo deu errado, tente novamente.',
-      toastSuccess: 'Feedback recebido. Valeu!',
-      toastError: 'Não consegui enviar seu feedback.'
-    });
-  };
-
-  /* =========================================================
-     Chat do Robô com IA plugável (sem expor chave)
-  ========================================================= */
-  const initRobot = () => {
-    const robotBtn = $('#robot');
-    const chatBox  = $('#robot-chat');
-    const userInput = $('#user-input');
-    const robotMsg  = $('#robot-message');
-    const sendBtn   = $('#send-button');
-
-    if (!robotBtn || !chatBox || !userInput || !robotMsg || !sendBtn) return;
-
-    const KEY = 'wcc-chat-open';
-    const ENDPOINT = '/api/chat'; // troque para o seu backend que chama a OpenAI
-    const controllerTimeout = (ms = 12000) => {
-      const ctrl = new AbortController();
-      const id = setTimeout(() => ctrl.abort('timeout'), ms);
-      return { ctrl, done: () => clearTimeout(id) };
-    };
-
-    const history = [
-      { role: 'system', content: 'Você é um assistente curto, educado e útil para um portfólio pessoal.' }
-    ];
-
-    const typeIn = async (el, text, speed = 12) => {
-      el.textContent = '';
-      const s = String(text);
-      for (let i = 0; i < s.length; i++) {
-        el.textContent += s[i];
-        if (!prefersReduced) await new Promise(r => setTimeout(r, speed));
-      }
-    };
-
-    const fallback = (q) => {
-      const t = q.toLowerCase();
-      if (t.includes('olá') || t.includes('oi')) return 'Olá! Posso te guiar pela página — quer ver habilidades, certificados ou falar comigo pelo formulário?';
-      if (t.includes('contato')) return 'Use a seção Contato. Assim que possível eu retorno!';
-      if (t.includes('certificado')) return 'Meus certificados estão na seção “Certificados”, com links diretos.';
-      if (t.includes('experi') || t.includes('trabalho')) return 'Atualmente atuo na Paschoalotto como Operador de Cobrança.';
-      if (t.includes('ads')) return 'Curso ADS na UNIMAR desde agosto/2024.';
-      if (t.includes('github')) return 'Dá uma olhada no meu GitHub — link nas redes.';
-      return 'Anotei sua pergunta! Posso comentar formação, experiência, certificados e formas de contato.';
-    };
-
-    const ask = async (question) => {
-      // chama seu backend seguro; nunca coloque chave no front
-      const payload = { messages: [...history, { role: 'user', content: question }] };
-      const { ctrl, done } = controllerTimeout(12000);
-      try {
-        const res = await fetch(ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          signal: ctrl.signal
-        });
-        done();
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-        const reply = (data && data.reply) ? String(data.reply) : fallback(question);
-        history.push({ role: 'assistant', content: reply });
-        return reply;
-      } catch (e) {
-        done();
-        return fallback(question);
-      }
-    };
-
-    // abrir/fechar
-    const setOpen = (open) => {
-      if (open) {
-        chatBox.classList.add('active');
-        robotBtn.setAttribute('aria-expanded', 'true');
-        robotBtn.classList.add('smiling');
-        try { sessionStorage.setItem(KEY, '1'); } catch {}
-      } else {
-        chatBox.classList.remove('active');
-        robotBtn.setAttribute('aria-expanded', 'false');
-        robotBtn.classList.remove('smiling');
-        try { sessionStorage.setItem(KEY, '0'); } catch {}
-      }
-    };
-
-    on(robotBtn, 'click', () => {
-      const open = chatBox.classList.contains('active');
-      setOpen(!open);
-      if (!open) userInput.focus();
-    });
-
-    on(document, 'keydown', (e) => {
-      if (e.key === 'Escape' && chatBox.classList.contains('active')) setOpen(false);
-    });
-
-    // restaura estado
-    try {
-      if (sessionStorage.getItem(KEY) === '1') setOpen(true);
-    } catch {}
-
-    const doSend = async () => {
-      const raw = (userInput.value || '').trim();
-      if (!raw) return;
-      const question = sanitize(raw);
-      userInput.value = '';
-      robotBtn.classList.add('smiling');
-      await typeIn(robotMsg, 'Digitando...', 8);
-      const reply = await ask(question);
-      await typeIn(robotMsg, reply, 10);
-      robotBtn.classList.remove('smiling');
-    };
-
-    on(sendBtn, 'click', (e) => { e.preventDefault(); doSend(); });
-    on(userInput, 'keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); doSend(); }
-    });
-  };
-
-  /* =========================================================
-     QoL e Acessibilidade extra
-  ========================================================= */
-  const initQoL = () => {
-    // classe para diferenciar mouse/teclado (foco visível)
-    let usingMouse = false;
-    on(document, 'mousedown', () => { usingMouse = true; document.documentElement.classList.add('using-mouse'); });
-    on(document, 'keydown', (e) => { if (e.key === 'Tab') { usingMouse = false; document.documentElement.classList.remove('using-mouse'); } });
-
-    // imagens sem alt -> alt genérico; sem loading -> lazy
-    $$('img').forEach((img) => {
-      if (!img.getAttribute('alt')) img.setAttribute('alt', 'Imagem');
-      if (!img.getAttribute('loading')) img.setAttribute('loading', 'lazy');
-      // largura/altura ajudam a evitar layout shift
-      if (!img.width || !img.height) {
-        // não força width/height se já definido via CSS; apenas sugere
-      }
-    });
-  };
-
-  /* =========================================================
-     Bootstrap (carrega tudo na ordem correta)
-  ========================================================= */
-  const boot = () => {
-    try { initSmoothNav(); }      catch (e) { console.warn('smoothNav', e); }
-    try { initBackToTop(); }      catch (e) { console.warn('backToTop', e); }
-    try { initSectionReveal(); }  catch (e) { console.warn('sectionReveal', e); }
-    try { initClock(); }          catch (e) { console.warn('clock', e); }
-    try { initThemeSwitch(); }    catch (e) { console.warn('theme', e); }
-    try { initForms(); }          catch (e) { console.warn('forms', e); }
-    try { initRobot(); }          catch (e) { console.warn('robot', e); }
-    try { initQoL(); }            catch (e) { console.warn('qol', e); }
-  };
-
-  if (document.readyState === 'loading') {
-    on(document, 'DOMContentLoaded', boot, { once: true });
-  } else {
-    boot();
+/* ========================================================
+   AURORA MINIMAL v2 — limpo, estável e acessível
+   (compatível com o scripts.js refatorado)
+======================================================== */
+
+/* TOKENS */
+:root{
+  /* base (dark por padrão) */
+  --bg:#0b1115;
+  --surface:#0f1720;
+  --surface-2:#111a24;
+  --card:#111b26;
+  --line:#1e2936;
+
+  --text:#e5eef6;
+  --muted:#9fb0bf;
+
+  --accent:#7dd3fc;   /* ciano suave */
+  --accent-2:#22d3ee; /* ciano forte (hover/estado) */
+  --danger:#ef476f;
+
+  --ff:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif;
+
+  --fs-900: clamp(2.2rem, 2.2vw + 1.2rem, 3.1rem);
+  --fs-800: clamp(1.6rem, 1.2vw + 1rem, 2.2rem);
+  --fs-700: 1.375rem;
+  --fs-600: 1.125rem;
+  --fs-500: 1rem;
+  --fs-400: .95rem;
+
+  --r-8:.5rem; --r-10:.625rem; --r-12:.75rem; --r-14:.875rem; --r-16:1rem;
+  --sp-2:.5rem; --sp-3:.75rem; --sp-4:1rem; --sp-5:1.25rem; --sp-6:1.5rem; --sp-8:2rem;
+
+  --easing:cubic-bezier(.22,1,.36,1);
+  --t-fast:.18s var(--easing);
+  --t-norm:.28s var(--easing);
+
+  --shadow-sm:0 6px 16px rgba(0,0,0,.22);
+  --shadow-md:0 12px 28px rgba(0,0,0,.28);
+
+  --container-max:1200px;
+}
+
+/* tema automático conforme SO quando html tem .auto-theme */
+.auto-theme:root{}
+@media (prefers-color-scheme: light){
+  .auto-theme:root{
+    --bg:#f8fafc; --surface:#ffffff; --surface-2:#f2f6fb; --card:#ffffff;
+    --line:#dde7f0; --text:#0e1a24; --muted:#526575;
+    --accent:#0ea5e9; --accent-2:#0284c7;
+    --shadow-sm:0 6px 16px rgba(15, 23, 32, .08);
+    --shadow-md:0 12px 28px rgba(15, 23, 32, .12);
   }
-})();
+}
+
+/* força dark/light/contrast */
+.theme-dark:root{
+  --bg:#0b1115; --surface:#0f1720; --surface-2:#111a24; --card:#111b26; --line:#1e2936;
+  --text:#e5eef6; --muted:#9fb0bf; --accent:#7dd3fc; --accent-2:#22d3ee;
+}
+.theme-light:root{
+  --bg:#f8fafc; --surface:#ffffff; --surface-2:#f2f6fb; --card:#ffffff; --line:#dde7f0;
+  --text:#0e1a24; --muted:#526575; --accent:#0ea5e9; --accent-2:#0284c7;
+  --shadow-sm:0 6px 16px rgba(15, 23, 32, .08);
+  --shadow-md:0 12px 28px rgba(15, 23, 32, .12);
+}
+.theme-contrast:root{
+  --bg:#000; --surface:#000; --surface-2:#000; --card:#000; --line:#00ffe0;
+  --text:#fff; --muted:#fff; --accent:#00ffe0; --accent-2:#00bfae;
+  --shadow-sm:none; --shadow-md:none;
+}
+
+/* RESET & BASE */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:var(--ff); color:var(--text); background:var(--bg);
+  line-height:1.6; letter-spacing:.01em; -webkit-font-smoothing:antialiased;
+}
+::selection{background:color-mix(in srgb, var(--accent-2) 25%, transparent)}
+a{color:var(--accent); text-decoration:none}
+a:hover{color:var(--accent-2); text-decoration:underline; text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:.35rem}
+.using-mouse :focus{outline:none}
+
+/* Scrollbar (webkit) */
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
+
+/* UTIL ACESSÍVEL */
+.sr-only{
+  position:absolute!important; width:1px;height:1px; padding:0;margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+/* HEADER */
+header{
+  position:sticky; top:0; z-index:50;
+  backdrop-filter:saturate(115%) blur(10px);
+  background:color-mix(in srgb, var(--bg) 75%, transparent);
+  border-bottom:1px solid var(--line);
+}
+.header-content{
+  max-width:var(--container-max); margin:0 auto; padding:var(--sp-6) var(--sp-4) var(--sp-4);
+  display:flex; flex-direction:column; align-items:center; gap:.5rem;
+}
+header h1{margin:0; font-size:var(--fs-900); font-weight:700; letter-spacing:.02em}
+header p{margin:0; color:var(--muted); font-size:var(--fs-600)}
+header nav{margin-top:var(--sp-4)}
+header nav ul{margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:.5rem}
+header nav a{
+  display:inline-block; padding:.55rem .85rem; font-size:var(--fs-500);
+  color:var(--text); border:1px solid var(--line); border-radius:999px;
+  transition:background var(--t-norm), border-color var(--t-norm), color var(--t-norm), transform var(--t-fast);
+}
+header nav a:hover{
+  background:var(--surface-2);
+  border-color:color-mix(in srgb, var(--accent) 35%, var(--line));
+  transform:translateY(-1px)
+}
+header nav a.active{
+  background:color-mix(in srgb, var(--accent) 16%, var(--surface));
+  border-color:color-mix(in srgb, var(--accent) 40%, var(--line));
+  color:var(--text)
+}
+
+/* Relógio */
+#clock{margin:.4rem 0 var(--sp-4); color:var(--muted); font-size:var(--fs-500)}
+
+/* CONTAINER & SECTIONS */
+.container{max-width:var(--container-max); width:92%; margin:var(--sp-8) auto}
+.section{
+  background:var(--card); border:1px solid var(--line); border-radius:16px;
+  padding:clamp(1rem, 2.5vw, 2rem); box-shadow:var(--shadow-sm);
+  transition:border-color var(--t-norm), box-shadow var(--t-norm), transform .6s var(--easing);
+}
+.section + .section{margin-top:var(--sp-8)}
+.section:hover{
+  border-color:color-mix(in srgb, var(--accent) 28%, var(--line));
+  box-shadow:var(--shadow-md)
+}
+h2{
+  margin:.2rem 0 var(--sp-4); font-size:var(--fs-800); font-weight:700;
+  border-bottom:1px solid var(--line); padding-bottom:.6rem; letter-spacing:.02em;
+}
+
+/* CARDS */
+.education-item,.experience-item{
+  background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:1rem 1.1rem; box-shadow:var(--shadow-sm);
+}
+.education-item + .education-item,.experience-item + .experience-item{margin-top:.9rem}
+.education-item h3,.experience-item h3{margin:.2rem 0 .4rem; font-size:var(--fs-700)}
+
+/* SKILLS */
+.skills-list{
+  display:grid; gap:.9rem; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+}
+.skill-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:.9rem 1rem;
+  font-size:var(--fs-600); box-shadow:var(--shadow-sm);
+  transition:transform var(--t-fast), border-color var(--t-norm), background var(--t-norm);
+}
+.skill-card:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
+
+/* CERTIFICADOS */
+.certificates-list{display:grid; gap:.8rem}
+.certificate-item{
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:.9rem 1rem;
+  transition:transform var(--t-fast), border-color var(--t-norm), background var(--t-norm);
+}
+.certificate-item:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
+.certificate-item h3{margin:.2rem 0}
+.certificate-item a{text-decoration:none}
+.certificate-item a:hover{text-decoration:underline}
+
+/* FORMULÁRIOS */
+form{display:grid; gap:.85rem}
+label{color:var(--muted); font-weight:500}
+input,textarea{
+  width:100%; font-size:var(--fs-500); color:var(--text);
+  background:var(--surface-2); border:1px solid var(--line); border-radius:12px;
+  padding:.85rem .95rem; transition:border-color var(--t-norm), box-shadow var(--t-norm), background var(--t-norm);
+}
+textarea{min-height:140px; resize:vertical}
+input::placeholder,textarea::placeholder{color:color-mix(in srgb, var(--muted) 70%, transparent)}
+input:focus,textarea:focus{border-color:var(--accent); box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent)}
+button{
+  align-self:start; border:none; border-radius:12px; padding:.85rem 1rem;
+  font-size:var(--fs-600); font-weight:700; letter-spacing:.02em; color:var(--text);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--accent) 30%, transparent), color-mix(in srgb, var(--accent) 45%, transparent));
+  border:1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+  box-shadow:var(--shadow-sm); cursor:pointer; transition:transform var(--t-fast), filter var(--t-norm), box-shadow var(--t-norm);
+}
+button:hover{transform:translateY(-1px); filter:brightness(1.05); box-shadow:var(--shadow-md)}
+button:disabled{opacity:.6; cursor:not-allowed}
+#form-status,#feedback-status{min-height:1.25rem}
+
+/* REDES SOCIAIS */
+.social-links{display:flex; gap:.6rem; flex-wrap:wrap; align-items:center}
+.social-links a{
+  --size:42px; width:var(--size); height:var(--size); display:grid; place-items:center;
+  background:var(--surface-2); border:1px solid var(--line); border-radius:999px;
+  transition:transform var(--t-fast), border-color var(--t-norm), background var(--t-norm);
+}
+.social-links a:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
+.social-links img{width:22px; height:22px}
+
+/* FOOTER */
+footer{
+  margin-top:var(--sp-8); border-top:1px solid var(--line);
+  background:color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter:saturate(115%) blur(8px);
+}
+footer p{margin:.7rem 0; text-align:center; color:var(--muted)}
+footer .heart{color:var(--danger)}
+
+/* BACK-TO-TOP */
+.back-to-top{
+  position:fixed; bottom:22px; right:22px; z-index:40;
+  width:46px; height:46px; border-radius:12px; border:1px solid var(--line);
+  background:var(--surface); color:var(--text); font-size:18px; box-shadow:var(--shadow-sm);
+  transition:transform var(--t-fast), opacity .3s, border-color var(--t-norm), background var(--t-norm);
+}
+.back-to-top:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
+.visible{opacity:1} .invisible{opacity:0}
+
+/* ROBÔ (minimal) */
+.robot-container{position:fixed; bottom:28px; right:28px; z-index:45; display:grid; gap:.5rem}
+#robot{
+  width:88px; height:88px; border-radius:14px; border:1px solid var(--line);
+  background:var(--surface); box-shadow:var(--shadow-sm); cursor:pointer;
+  display:grid; place-items:center; transition:transform var(--t-fast), border-color var(--t-norm), background var(--t-norm);
+}
+#robot:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
+#robot .head{
+  width:56px; height:56px; border-radius:12px; background:var(--surface-2);
+  border:1px solid var(--line); display:grid; place-items:center
+}
+#robot .eyes{display:flex; gap:10px}
+#robot .eye{width:8px; height:8px; border-radius:999px; background:var(--text)}
+#robot .mouth{margin-top:6px; width:28px; height:4px; border-radius:999px; background:var(--text); opacity:.7}
+#robot.smiling .mouth{height:2px; opacity:1}
+
+#robot-chat{
+  display:none; position:absolute; right:0; bottom:100%;
+  width:300px; translate:0 -10px; padding:.9rem; border-radius:14px;
+  background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow-md);
+}
+#robot-chat.active{display:block}
+.robot-message{color:var(--muted); margin-bottom:.6rem}
+.input-container{display:grid; grid-template-columns:1fr auto; gap:.5rem}
+.user-input{
+  background:var(--surface-2); border:1px solid var(--line); border-radius:10px; color:var(--text);
+  padding:.65rem .75rem;
+}
+.user-input:focus{border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent)}
+.send-button{
+  border-radius:10px; background:var(--surface); border:1px solid var(--line); color:var(--text);
+}
+.send-button:hover{border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
+
+/* LINKS discretos dentro de section (coerentes com o visual) */
+.section a:not(.send-button){
+  text-decoration:none; border-bottom:1px dashed color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.section a:not(.send-button):hover{border-bottom-color:var(--accent-2)}
+
+/* RESPONSIVO */
+@media (max-width:1024px){
+  header h1{font-size:clamp(1.9rem, 3vw + 1rem, 2.5rem)}
+  .container{width:92%}
+}
+@media (max-width:768px){
+  header nav ul{justify-content:center}
+  header nav a{padding:.5rem .75rem}
+  .skills-list{grid-template-columns:1fr}
+  #robot{width:80px;height:80px}
+}
+@media (max-width:480px){
+  .container{width:94%}
+  h2{font-size:1.35rem}
+  #robot-chat{width:min(88vw, 320px)}
+}
+
+/* CONTRASTE REFINADO */
+.theme-contrast *{outline-color:#00ffe0}
+.theme-contrast .section,
+.theme-contrast .education-item,
+.theme-contrast .experience-item,
+.theme-contrast .certificate-item{border-width:2px}
