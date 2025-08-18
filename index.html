@@ -1,83 +1,59 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="auto-theme">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
-  <meta
-    name="description"
-    content="Portfólio de William Camilo (WCC) — estudante de Análise e Desenvolvimento de Sistemas (ADS) e Marketing Digital. Projetos, experiência, certificações e contato."
-  />
-  <meta
-    name="keywords"
-    content="William Camilo, WCC, Currículo, Portfólio, ADS, Marketing Digital, Tecnologia, Desenvolvedor, Marília"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Portfólio de William Camilo (WCC) — ADS e Marketing Digital. Experiência, habilidades, certificações e contato." />
   <meta name="author" content="William Camilo" />
-  <meta name="theme-color" content="#0ea5a4" />
+  <meta name="theme-color" content="#0ea5e9" />
   <link rel="canonical" href="https://seu-dominio.exemplo/" />
 
   <title>Currículo & Portfólio — William Camilo (WCC)</title>
 
-  <!-- Favicon e manifest (ajuste os caminhos se necessário) -->
+  <!-- Favicon / Manifest (ajuste os caminhos se tiver) -->
   <link rel="icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <link rel="manifest" href="manifest.json" />
 
-  <!-- Pré-conexões para fontes (melhor performance) -->
+  <!-- Fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Estilos -->
+  <!-- CSS -->
   <link rel="stylesheet" href="CSS/style.css" />
 
   <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="pt_BR" />
   <meta property="og:title" content="Currículo & Portfólio — William Camilo (WCC)" />
-  <meta
-    property="og:description"
-    content="ADS + Marketing Digital. Projetos, experiência, certificações e contato."
-  />
+  <meta property="og:description" content="ADS + Marketing Digital. Experiência, habilidades, certificados e contato." />
   <meta property="og:image" content="images/cover.jpg" />
   <meta property="og:url" content="https://seu-dominio.exemplo/" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Currículo & Portfólio — William Camilo (WCC)" />
-  <meta
-    name="twitter:description"
-    content="ADS + Marketing Digital. Projetos, experiência, certificações e contato."
-  />
+  <meta name="twitter:description" content="ADS + Marketing Digital. Experiência, habilidades, certificados e contato." />
   <meta name="twitter:image" content="images/cover.jpg" />
 
   <!-- Schema.org (JSON-LD) -->
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "William Camilo",
-    "alternateName": "WCC",
-    "jobTitle": "Estudante de ADS e Marketing Digital",
-    "affiliation": { "@type": "CollegeOrUniversity", "name": "Universidade de Marília (UNIMAR)" },
-    "address": { "@type": "PostalAddress", "addressLocality": "Marília", "addressRegion": "SP", "addressCountry": "BR" },
-    "url": "https://seu-dominio.exemplo/",
-    "sameAs": [
+    "@context":"https://schema.org",
+    "@type":"Person",
+    "name":"William Camilo",
+    "alternateName":"WCC",
+    "jobTitle":"Estudante de ADS e Marketing Digital",
+    "affiliation":{"@type":"CollegeOrUniversity","name":"Universidade de Marília (UNIMAR)"},
+    "address":{"@type":"PostalAddress","addressLocality":"Marília","addressRegion":"SP","addressCountry":"BR"},
+    "url":"https://seu-dominio.exemplo/",
+    "sameAs":[
       "https://www.linkedin.com/in/william-camilo-636b69229/",
       "https://github.com/williamcamilll"
     ],
-    "email": "mailto:seu-email@exemplo.com",
-    "telephone": "+55-14-99118-5465"
+    "email":"mailto:seu-email@exemplo.com",
+    "telephone":"+55-14-99118-5465"
   }
   </script>
-
-  <style>
-    /* Fallback mínimo caso CSS externo não carregue (opcional) */
-    .no-css-fallback body { font-family: Poppins, system-ui, sans-serif; background:#0e2433; color:#fff; }
-  </style>
 </head>
 <body>
   <a href="#conteudo-principal" class="sr-only">Ir para o conteúdo principal</a>
@@ -86,7 +62,7 @@
   <header role="banner">
     <div class="header-content" aria-labelledby="site-title">
       <h1 id="site-title">William Camilo</h1>
-      <p aria-label="Áreas de atuação">ADS e Marketing • <strong>WCC</strong></p>
+      <p aria-label="Áreas">ADS e Marketing • <strong>WCC</strong></p>
 
       <nav aria-label="Navegação principal">
         <ul>
@@ -103,7 +79,7 @@
     <div id="clock" aria-live="polite" aria-atomic="true" title="Horário de Brasília"></div>
   </header>
 
-  <!-- Robô Interativo com IA -->
+  <!-- Robô Interativo -->
   <div id="robot-container" class="robot-container" aria-live="polite">
     <button id="robot" class="robot" aria-expanded="false" aria-controls="robot-chat" aria-label="Abrir assistente virtual">
       <div class="head" aria-hidden="true">
@@ -113,48 +89,36 @@
         </div>
         <div class="mouth"></div>
       </div>
-      <div class="body" aria-hidden="true"></div>
     </button>
 
     <div id="robot-chat" class="robot-chat" role="dialog" aria-modal="false" aria-labelledby="robot-message">
       <div id="robot-message" class="robot-message">Olá! Posso ajudar em algo?</div>
       <form id="robot-form" class="input-container" autocomplete="off">
         <label for="user-input" class="sr-only">Digite sua pergunta</label>
-        <input
-          type="text"
-          id="user-input"
-          class="user-input"
-          placeholder="Digite sua pergunta..."
-          aria-label="Digite sua pergunta"
-          minlength="2"
-          required
-        />
-        <button id="send-button" class="send-button" aria-label="Enviar pergunta" type="submit">
-          Enviar
-        </button>
+        <input type="text" id="user-input" class="user-input" placeholder="Digite sua pergunta..." aria-label="Digite sua pergunta" minlength="2" required />
+        <button id="send-button" class="send-button" aria-label="Enviar pergunta" type="submit">Enviar</button>
       </form>
     </div>
   </div>
 
   <!-- Conteúdo Principal -->
   <main id="conteudo-principal" class="container">
-    <!-- Seção Sobre Mim -->
+    <!-- Sobre -->
     <section id="sobre" class="section" aria-labelledby="titulo-sobre">
       <h2 id="titulo-sobre">Sobre Mim</h2>
       <p>
         Tenho 21 anos e sou estudante de <strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> na UNIMAR.
-        Iniciei em <strong>Marketing Digital</strong> (EaD) e tranquei temporariamente para focar em tecnologia e
-        desenvolvimento de sistemas. Minha intenção é integrar ambas as áreas para criar soluções completas
-        — produto bem construído e estratégia que entrega resultado.
+        Iniciei <strong>Marketing Digital</strong> (EaD) e tranquei temporariamente para focar em tecnologia e
+        desenvolvimento de sistemas. Meu objetivo é integrar as duas áreas para construir soluções completas —
+        produto bem feito + estratégia que entrega resultado.
       </p>
       <p>
-        Gosto de construir interfaces claras, entender o negócio e usar dados para tomar decisões. Mantenho
-        rotina de estudos contínua e busco tendências de tecnologia e marketing para evoluir projetos com
-        qualidade e impacto real.
+        Curto interfaces claras, entender o negócio e usar dados para decidir. Estudo continuamente tendências
+        de tecnologia e marketing para evoluir projetos com qualidade e impacto real.
       </p>
     </section>
 
-    <!-- Seção Educação -->
+    <!-- Educação -->
     <section id="educacao" class="section" aria-labelledby="titulo-educacao">
       <h2 id="titulo-educacao">Educação</h2>
 
@@ -171,7 +135,7 @@
       </article>
     </section>
 
-    <!-- Seção Experiência Profissional -->
+    <!-- Experiência -->
     <section id="experiencia" class="section" aria-labelledby="titulo-experiencia">
       <h2 id="titulo-experiencia">Experiência Profissional</h2>
 
@@ -189,10 +153,9 @@
       </article>
     </section>
 
-    <!-- Seção Habilidades -->
+    <!-- Habilidades -->
     <section id="habilidades" class="section" aria-labelledby="titulo-habilidades">
       <h2 id="titulo-habilidades">Habilidades</h2>
-
       <div class="skills-list" role="list">
         <div class="skill-card" role="listitem">Gestão de Pessoas</div>
         <div class="skill-card" role="listitem">Atendimento ao Cliente</div>
@@ -202,15 +165,13 @@
       </div>
     </section>
 
-    <!-- Seção Certificados -->
+    <!-- Certificados -->
     <section id="certificados" class="section" aria-labelledby="titulo-certificados">
       <h2 id="titulo-certificados">Certificados</h2>
-
       <div class="certificates-list" role="list">
         <article class="certificate-item" role="listitem">
           <h3>
-            <a href="https://drive.google.com/file/d/1QPGAPLdNmCJzwjImMvgFvnxbCH-nHYI_/view?usp=sharing"
-               target="_blank" rel="noopener noreferrer">
+            <a href="https://drive.google.com/file/d/1QPGAPLdNmCJzwjImMvgFvnxbCH-nHYI_/view?usp=sharing" target="_blank" rel="noopener noreferrer">
               Minicurso: Comunicação para o Mercado de Trabalho — M1.2024
             </a>
           </h3>
@@ -218,8 +179,7 @@
 
         <article class="certificate-item" role="listitem">
           <h3>
-            <a href="https://drive.google.com/file/d/14CvmZ6gVt35ndEKCdSLSU_8LkOdQuwwZ/view?usp=sharing"
-               target="_blank" rel="noopener noreferrer">
+            <a href="https://drive.google.com/file/d/14CvmZ6gVt35ndEKCdSLSU_8LkOdQuwwZ/view?usp=sharing" target="_blank" rel="noopener noreferrer">
               2º ConfestDev Marília 2024 (Google Developer Groups)
             </a>
           </h3>
@@ -227,8 +187,7 @@
 
         <article class="certificate-item" role="listitem">
           <h3>
-            <a href="https://drive.google.com/file/d/13cRC3L6tsn0jayWVTLtPb7fsxL5-JLgk/view?usp=sharing"
-               target="_blank" rel="noopener noreferrer">
+            <a href="https://drive.google.com/file/d/13cRC3L6tsn0jayWVTLtPb7fsxL5-JLgk/view?usp=sharing" target="_blank" rel="noopener noreferrer">
               Minicurso: Inteligência Emocional — M1.2024
             </a>
           </h3>
@@ -236,8 +195,7 @@
 
         <article class="certificate-item" role="listitem">
           <h3>
-            <a href="https://drive.google.com/file/d/1x3Lc_sKIQlTwNzCF18WbyJRLmpowE_EH/view?usp=sharing"
-               target="_blank" rel="noopener noreferrer">
+            <a href="https://drive.google.com/file/d/1x3Lc_sKIQlTwNzCF18WbyJRLmpowE_EH/view?usp=sharing" target="_blank" rel="noopener noreferrer">
               Minicurso: Finanças Pessoais — M1.2024
             </a>
           </h3>
@@ -245,7 +203,6 @@
 
         <article class="certificate-item" role="listitem">
           <h3>
-            <!-- Corrigido: estava sem href -->
             <a href="https://drive.google.com/" target="_blank" rel="noopener noreferrer">
               Minicurso: Aperfeiçoamento Pedagógico em Informática — M1.2024
             </a>
@@ -254,10 +211,9 @@
       </div>
     </section>
 
-    <!-- Seção Contato -->
+    <!-- Contato -->
     <section id="contato" class="section" aria-labelledby="titulo-contato">
       <h2 id="titulo-contato">Contato</h2>
-
       <form id="contact-form" novalidate>
         <label for="nome">Nome <span aria-hidden="true">*</span></label>
         <input type="text" id="nome" name="nome" autocomplete="name" required minlength="2" />
@@ -268,7 +224,7 @@
         <label for="mensagem">Mensagem <span aria-hidden="true">*</span></label>
         <textarea id="mensagem" name="mensagem" rows="4" required minlength="5"></textarea>
 
-        <!-- Honeypot anti-spam (oculto para humanos) -->
+        <!-- Honeypot -->
         <div class="sr-only" aria-hidden="true">
           <label for="company">Company</label>
           <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
@@ -276,28 +232,23 @@
 
         <button type="submit">Enviar</button>
       </form>
-
       <p id="form-status" role="status" aria-live="polite"></p>
 
       <p><strong>Telefone:</strong> <a href="tel:+5514991185465" rel="nofollow">(+55) 14 99118-5465</a></p>
       <p>Siga-me nas redes sociais:</p>
-
       <div class="social-links" aria-label="Redes sociais">
-        <a href="https://www.linkedin.com/in/william-camilo-636b69229/"
-           target="_blank" rel="noopener noreferrer" aria-label="LinkedIn de William Camilo">
+        <a href="https://www.linkedin.com/in/william-camilo-636b69229/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn de William Camilo">
           <img src="images/linkedin-icon.png" alt="LinkedIn" width="28" height="28" loading="lazy" />
         </a>
-        <a href="https://github.com/williamcamilll"
-           target="_blank" rel="noopener noreferrer" aria-label="GitHub de William Camilo">
+        <a href="https://github.com/williamcamilll" target="_blank" rel="noopener noreferrer" aria-label="GitHub de William Camilo">
           <img src="images/github-icon.png" alt="GitHub" width="28" height="28" loading="lazy" />
         </a>
       </div>
     </section>
 
-    <!-- Seção de Feedback -->
+    <!-- Feedback -->
     <section id="feedback" class="section" aria-labelledby="titulo-feedback">
       <h2 id="titulo-feedback">Deixe seu Feedback</h2>
-
       <form id="feedback-form" novalidate>
         <label for="nome-feedback">Nome <span aria-hidden="true">*</span></label>
         <input type="text" id="nome-feedback" name="nome" required minlength="2" />
@@ -316,7 +267,6 @@
 
         <button type="submit">Enviar Feedback</button>
       </form>
-
       <p id="feedback-status" role="status" aria-live="polite"></p>
     </section>
   </main>
@@ -327,7 +277,7 @@
     <p>Desenvolvido por William Camilo <span class="heart" aria-hidden="true">❤</span></p>
   </footer>
 
-  <!-- Botão de Voltar ao Topo -->
+  <!-- Botão Voltar ao Topo -->
   <button class="back-to-top" title="Voltar ao topo" aria-label="Voltar ao topo" hidden>&uarr;</button>
 
   <!-- Scripts -->
@@ -337,89 +287,8 @@
   <noscript>Ative o JavaScript para a melhor experiência.</noscript>
 
   <script>
-    // Ajustes rápidos sem depender do scripts.js
-
-    // Atualiza ano no rodapé
+    // pequenas garantias se o JS externo atrasar:
     document.getElementById('ano-atual').textContent = new Date().getFullYear();
-
-    // Exibe/oculta botão "voltar ao topo"
-    const backToTop = document.querySelector('.back-to-top');
-    const toggleBackToTop = () => {
-      if (window.scrollY > 600) {
-        backToTop.hidden = false;
-        backToTop.classList.add('visible');
-        backToTop.classList.remove('invisible');
-      } else {
-        backToTop.classList.add('invisible');
-        backToTop.classList.remove('visible');
-        // delay para esconder apos transição
-        setTimeout(() => { if (backToTop.classList.contains('invisible')) backToTop.hidden = true; }, 400);
-      }
-    };
-    window.addEventListener('scroll', toggleBackToTop, { passive: true });
-    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-    // Relógio simples (horário de Brasília)
-    const clockEl = document.getElementById('clock');
-    const updateClock = () => {
-      try {
-        const now = new Date();
-        // Força exibição em pt-BR (24h)
-        const str = now.toLocaleString('pt-BR', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        });
-        clockEl.textContent = str + ' — Brasília';
-      } catch(e) {
-        clockEl.textContent = '';
-      }
-    };
-    setInterval(updateClock, 1000); updateClock();
-
-    // Robô toggle
-    const robotBtn = document.getElementById('robot');
-    const robotChat = document.getElementById('robot-chat');
-    robotBtn.addEventListener('click', () => {
-      const expanded = robotBtn.getAttribute('aria-expanded') === 'true';
-      robotBtn.setAttribute('aria-expanded', String(!expanded));
-      robotChat.classList.toggle('active');
-      robotBtn.classList.toggle('smiling'); // anima a boca (usa CSS existente)
-    });
-
-    // Formulários com validação básica + honeypot
-    function wireForm(formId, statusId, honeypotField) {
-      const form = document.getElementById(formId);
-      const status = document.getElementById(statusId);
-      if (!form) return;
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        // Honeypot
-        if (honeypotField && form.querySelector('#' + honeypotField)?.value) {
-          status.textContent = 'Falha na validação.';
-          return;
-        }
-        if (!form.checkValidity()) {
-          status.textContent = 'Verifique os campos obrigatórios.';
-          form.reportValidity?.();
-          return;
-        }
-        // Aqui você pode integrar com um backend/EmailJS/API
-        status.textContent = 'Enviado com sucesso! Obrigado pelo contato.';
-        form.reset();
-      });
-    }
-    wireForm('contact-form', 'form-status', 'company');
-    wireForm('feedback-form', 'feedback-status', 'website');
-
-    // Acessibilidade: fecha o chat do robô com Esc
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && robotChat.classList.contains('active')) {
-        robotChat.classList.remove('active');
-        robotBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
   </script>
 </body>
 </html>
-
