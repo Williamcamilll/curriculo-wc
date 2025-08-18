@@ -1,23 +1,27 @@
-/* ========================================================
-   AURORA MINIMAL — visual limpo, sóbrio e elegante
-   (mantém os mesmos seletores do seu HTML)
-======================================================== */
+/* =========================================================
+   WCC — Aurora Minimal v3
+   Visual limpo, acessível, responsivo e com temas
+   (compatível com o index.html e scripts.js desta conversa)
+========================================================= */
 
-/* TOKENS */
+/* ---------- Design Tokens ---------- */
 :root{
-  /* cores base (dark por padrão) */
+  /* Cores (modo dark por padrão) */
   --bg:#0b1115;
   --surface:#0f1720;
   --surface-2:#111a24;
   --card:#111b26;
   --line:#1e2936;
+
   --text:#e5eef6;
   --muted:#9fb0bf;
-  --accent:#7dd3fc;          /* ciano suave */
-  --accent-2:#22d3ee;        /* ciano forte para hover */
+
+  /* Acento (troque para personalizar a “personalidade”) */
+  --accent:#7dd3fc;   /* ciano suave */
+  --accent-2:#22d3ee; /* ciano forte (hover) */
   --danger:#ef476f;
 
-  /* tipografia & ritmo */
+  /* Tipografia / Ritmo */
   --ff:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif;
   --fs-900: clamp(2.2rem, 2.2vw + 1.2rem, 3.1rem);
   --fs-800: clamp(1.6rem, 1.2vw + 1rem, 2.2rem);
@@ -26,7 +30,7 @@
   --fs-500: 1rem;
   --fs-400: .95rem;
 
-  --r-8:.5rem; --r-10:.625rem; --r-12:.75rem;
+  --r-8:.5rem; --r-10:.625rem; --r-12:.75rem; --r-14:.875rem; --r-16:1rem;
   --sp-2:.5rem; --sp-3:.75rem; --sp-4:1rem; --sp-5:1.25rem; --sp-6:1.5rem; --sp-8:2rem;
 
   --easing:cubic-bezier(.22,1,.36,1);
@@ -36,41 +40,64 @@
   --shadow-sm:0 6px 16px rgba(0,0,0,.22);
   --shadow-md:0 12px 28px rgba(0,0,0,.28);
 
-  --container:max(68ch, 70%);
+  --container-max:1200px;
 }
 
-/* modo claro opcional via classe .theme-light no <html> */
+/* Tema automático quando <html> tem .auto-theme */
+.auto-theme:root{}
+@media (prefers-color-scheme: light){
+  .auto-theme:root{
+    --bg:#f8fafc; --surface:#ffffff; --surface-2:#f2f6fb; --card:#ffffff;
+    --line:#dde7f0; --text:#0e1a24; --muted:#526575;
+    --accent:#0ea5e9; --accent-2:#0284c7;
+    --shadow-sm:0 6px 16px rgba(15, 23, 32, .08);
+    --shadow-md:0 12px 28px rgba(15, 23, 32, .12);
+  }
+}
+
+/* Força de tema via classe no <html> */
+.theme-dark:root{
+  --bg:#0b1115; --surface:#0f1720; --surface-2:#111a24; --card:#111b26; --line:#1e2936;
+  --text:#e5eef6; --muted:#9fb0bf; --accent:#7dd3fc; --accent-2:#22d3ee;
+}
 .theme-light:root{
-  --bg:#f8fafc;
-  --surface:#ffffff;
-  --surface-2:#f2f6fb;
-  --card:#ffffff;
-  --line:#dde7f0;
-  --text:#0e1a24;
-  --muted:#526575;
-  --accent:#0ea5e9;
-  --accent-2:#0284c7;
+  --bg:#f8fafc; --surface:#ffffff; --surface-2:#f2f6fb; --card:#ffffff; --line:#dde7f0;
+  --text:#0e1a24; --muted:#526575; --accent:#0ea5e9; --accent-2:#0284c7;
   --shadow-sm:0 6px 16px rgba(15, 23, 32, .08);
   --shadow-md:0 12px 28px rgba(15, 23, 32, .12);
 }
+.theme-contrast:root{
+  --bg:#000; --surface:#000; --surface-2:#000; --card:#000; --line:#00ffe0;
+  --text:#fff; --muted:#fff; --accent:#00ffe0; --accent-2:#00bfae;
+  --shadow-sm:none; --shadow-md:none;
+}
 
-/* base */
+/* ---------- Reset & Base ---------- */
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   margin:0; font-family:var(--ff); color:var(--text); background:var(--bg);
   line-height:1.6; letter-spacing:.01em; -webkit-font-smoothing:antialiased;
 }
-::selection{background:rgba(34,211,238,.25)}
+::selection{background:color-mix(in srgb, var(--accent-2) 25%, transparent)}
 a{color:var(--accent); text-decoration:none}
 a:hover{color:var(--accent-2); text-decoration:underline; text-underline-offset:3px}
 :focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:.35rem}
+.using-mouse :focus{outline:none}
 
-/* scrollbar suave (webkit) */
+img{max-width:100%; height:auto; display:block}
+
+/* Scrollbar (webkit) */
 *::-webkit-scrollbar{width:10px;height:10px}
 *::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
 
-/* HEADER */
+/* Utility: screen-reader only */
+.sr-only{
+  position:absolute!important; width:1px;height:1px; padding:0;margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+/* ---------- Header ---------- */
 header{
   position:sticky; top:0; z-index:50;
   backdrop-filter:saturate(115%) blur(10px);
@@ -78,43 +105,50 @@ header{
   border-bottom:1px solid var(--line);
 }
 .header-content{
-  max-width:1200px; margin:0 auto; padding:var(--sp-6) var(--sp-4) var(--sp-4);
+  max-width:var(--container-max); margin:0 auto; padding:var(--sp-6) var(--sp-4) var(--sp-4);
   display:flex; flex-direction:column; align-items:center; gap:.5rem;
 }
-header h1{
-  margin:0; font-size:var(--fs-900); font-weight:700; letter-spacing:.02em;
-}
+header h1{margin:0; font-size:var(--fs-900); font-weight:700; letter-spacing:.02em}
 header p{margin:0; color:var(--muted); font-size:var(--fs-600)}
 header nav{margin-top:var(--sp-4)}
-header nav ul{
-  margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:.5rem;
-}
+header nav ul{margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:.5rem}
 header nav a{
   display:inline-block; padding:.55rem .85rem; font-size:var(--fs-500);
   color:var(--text); border:1px solid var(--line); border-radius:999px;
   transition:background var(--t-norm), border-color var(--t-norm), color var(--t-norm), transform var(--t-fast);
 }
-header nav a:hover{background:var(--surface-2); border-color:color-mix(in srgb, var(--accent) 35%, var(--line)); transform:translateY(-1px)}
-header nav a.active{background:color-mix(in srgb, var(--accent) 16%, var(--surface)); border-color:color-mix(in srgb, var(--accent) 40%, var(--line)); color:var(--text)}
+header nav a:hover{
+  background:var(--surface-2);
+  border-color:color-mix(in srgb, var(--accent) 35%, var(--line));
+  transform:translateY(-1px)
+}
+header nav a.active{
+  background:color-mix(in srgb, var(--accent) 16%, var(--surface));
+  border-color:color-mix(in srgb, var(--accent) 40%, var(--line));
+  color:var(--text)
+}
 
-/* relógio */
+/* Relógio */
 #clock{margin:.4rem 0 var(--sp-4); color:var(--muted); font-size:var(--fs-500)}
 
-/* CONTAINER & SECTION */
-.container{max-width:1200px; width:92%; margin:var(--sp-8) auto var(--sp-8)}
+/* ---------- Layout & Seções ---------- */
+.container{max-width:var(--container-max); width:92%; margin:var(--sp-8) auto}
 .section{
   background:var(--card); border:1px solid var(--line); border-radius:16px;
   padding:clamp(1rem, 2.5vw, 2rem); box-shadow:var(--shadow-sm);
-  transition:border-color var(--t-norm), box-shadow var(--t-norm), transform .6s var(--easing);
+  transition:border-color var(--t-norm), box-shadow var(--t-norm), transform .6s var(--easing), opacity .5s var(--easing);
 }
 .section + .section{margin-top:var(--sp-8)}
-.section:hover{border-color:color-mix(in srgb, var(--accent) 28%, var(--line)); box-shadow:var(--shadow-md)}
+.section:hover{
+  border-color:color-mix(in srgb, var(--accent) 28%, var(--line));
+  box-shadow:var(--shadow-md)
+}
 h2{
   margin:.2rem 0 var(--sp-4); font-size:var(--fs-800); font-weight:700;
   border-bottom:1px solid var(--line); padding-bottom:.6rem; letter-spacing:.02em;
 }
 
-/* CARDS DE TEXTO */
+/* Cards de conteúdo */
 .education-item,.experience-item{
   background:var(--surface); border:1px solid var(--line); border-radius:14px;
   padding:1rem 1.1rem; box-shadow:var(--shadow-sm);
@@ -122,7 +156,7 @@ h2{
 .education-item + .education-item,.experience-item + .experience-item{margin-top:.9rem}
 .education-item h3,.experience-item h3{margin:.2rem 0 .4rem; font-size:var(--fs-700)}
 
-/* SKILLS */
+/* ---------- Skills ---------- */
 .skills-list{
   display:grid; gap:.9rem; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
 }
@@ -132,9 +166,8 @@ h2{
   transition:transform var(--t-fast), border-color var(--t-norm), background var(--t-norm);
 }
 .skill-card:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
-.skill-card::marker{color:var(--accent)}
 
-/* CERTIFICADOS */
+/* ---------- Certificados ---------- */
 .certificates-list{display:grid; gap:.8rem}
 .certificate-item{
   background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:.9rem 1rem;
@@ -145,7 +178,13 @@ h2{
 .certificate-item a{text-decoration:none}
 .certificate-item a:hover{text-decoration:underline}
 
-/* FORMULÁRIOS */
+/* Links discretos dentro das seções */
+.section a:not(.send-button){
+  text-decoration:none; border-bottom:1px dashed color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.section a:not(.send-button):hover{border-bottom-color:var(--accent-2)}
+
+/* ---------- Formulários ---------- */
 form{display:grid; gap:.85rem}
 label{color:var(--muted); font-weight:500}
 input,textarea{
@@ -167,7 +206,7 @@ button:hover{transform:translateY(-1px); filter:brightness(1.05); box-shadow:var
 button:disabled{opacity:.6; cursor:not-allowed}
 #form-status,#feedback-status{min-height:1.25rem}
 
-/* REDES SOCIAIS */
+/* ---------- Redes Sociais ---------- */
 .social-links{display:flex; gap:.6rem; flex-wrap:wrap; align-items:center}
 .social-links a{
   --size:42px; width:var(--size); height:var(--size); display:grid; place-items:center;
@@ -177,7 +216,7 @@ button:disabled{opacity:.6; cursor:not-allowed}
 .social-links a:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
 .social-links img{width:22px; height:22px}
 
-/* FOOTER */
+/* ---------- Footer ---------- */
 footer{
   margin-top:var(--sp-8);
   border-top:1px solid var(--line);
@@ -185,9 +224,8 @@ footer{
   backdrop-filter:saturate(115%) blur(8px);
 }
 footer p{margin:.7rem 0; text-align:center; color:var(--muted)}
-footer .heart{color:var(--danger)}
 
-/* BACK-TO-TOP */
+/* ---------- Back to Top ---------- */
 .back-to-top{
   position:fixed; bottom:22px; right:22px; z-index:40;
   width:46px; height:46px; border-radius:12px; border:1px solid var(--line);
@@ -197,7 +235,7 @@ footer .heart{color:var(--danger)}
 .back-to-top:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
 .visible{opacity:1} .invisible{opacity:0}
 
-/* ROBÔ (versão minimal) */
+/* ---------- Robô ---------- */
 .robot-container{position:fixed; bottom:28px; right:28px; z-index:45; display:grid; gap:.5rem}
 #robot{
   width:88px; height:88px; border-radius:14px; border:1px solid var(--line);
@@ -205,19 +243,23 @@ footer .heart{color:var(--danger)}
   display:grid; place-items:center; transition:transform var(--t-fast), border-color var(--t-norm), background var(--t-norm);
 }
 #robot:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
-#robot .head{width:56px; height:56px; border-radius:12px; background:var(--surface-2); border:1px solid var(--line); display:grid; place-items:center}
+#robot .head{
+  width:56px; height:56px; border-radius:12px; background:var(--surface-2);
+  border:1px solid var(--line); display:grid; place-items:center
+}
 #robot .eyes{display:flex; gap:10px}
 #robot .eye{width:8px; height:8px; border-radius:999px; background:var(--text)}
 #robot .mouth{margin-top:6px; width:28px; height:4px; border-radius:999px; background:var(--text); opacity:.7}
 #robot.smiling .mouth{height:2px; opacity:1}
 
+/* Janela de chat */
 #robot-chat{
   display:none; position:absolute; right:0; bottom:100%;
   width:300px; translate:0 -10px; padding:.9rem; border-radius:14px;
   background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow-md);
 }
 #robot-chat.active{display:block}
-.robot-message{color:var(--muted); margin-bottom:.6rem}
+.robot-message{color:var(--muted); margin-bottom:.6rem; white-space:pre-wrap}
 .input-container{display:grid; grid-template-columns:1fr auto; gap:.5rem}
 .user-input{
   background:var(--surface-2); border:1px solid var(--line); border-radius:10px; color:var(--text);
@@ -226,18 +268,14 @@ footer .heart{color:var(--danger)}
 .user-input:focus{border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent)}
 .send-button{
   border-radius:10px; background:var(--surface); border:1px solid var(--line); color:var(--text);
+  padding:.65rem .85rem; font-weight:600;
 }
 .send-button:hover{border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
 
-/* LINKS: aparência mais discreta em blocos */
-.section a:not(.send-button){
-  text-decoration:none; border-bottom:1px dashed color-mix(in srgb, var(--accent) 35%, transparent);
-}
-.section a:not(.send-button):hover{
-  border-bottom-color:var(--accent-2)
-}
+/* ---------- Acessibilidade extra ---------- */
+[hidden]{display:none!important}
 
-/* RESPONSIVO */
+/* ---------- Responsividade ---------- */
 @media (max-width:1024px){
   header h1{font-size:clamp(1.9rem, 3vw + 1rem, 2.5rem)}
   .container{width:92%}
@@ -247,18 +285,17 @@ footer .heart{color:var(--danger)}
   header nav a{padding:.5rem .75rem}
   .skills-list{grid-template-columns:1fr}
   #robot{width:80px;height:80px}
+  #robot-chat{width:min(88vw, 320px)}
 }
 @media (max-width:480px){
   .container{width:94%}
   h2{font-size:1.35rem}
-  #robot-chat{width:min(88vw, 320px)}
 }
 
-/* HIGH CONTRAST refinado quando .theme-light não está setado e usuário pediu contraste */
-.theme-contrast:root{
-  --bg:#000; --surface:#000; --surface-2:#000; --card:#000; --text:#fff; --muted:#fff;
-  --line:#00ffe0; --accent:#00ffe0; --accent-2:#00bfae; --shadow-sm:none; --shadow-md:none;
-}
+/* ---------- High Contrast refinado ---------- */
 .theme-contrast *{outline-color:#00ffe0}
-.theme-contrast .section,.theme-contrast .education-item,.theme-contrast .experience-item,.theme-contrast .certificate-item{border-width:2px}
+.theme-contrast .section,
+.theme-contrast .education-item,
+.theme-contrast .experience-item,
+.theme-contrast .certificate-item{border-width:2px}
 
