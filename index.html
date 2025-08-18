@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Portfólio de William Camilo, estudante de Marketing Digital e ADS.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title> Curriculo WCC</title>
+  <meta name="description" content="Portfólio de William Camilo, estudante de Marketing Digital e Análise e Desenvolvimento de Sistemas (ADS), focado em tecnologia e estratégias digitais.">
+  <meta name="keywords" content="William Camilo, Curriculo, Marketing Digital, Análise e Desenvolvimento de Sistemas, (ADS), Tecnologia">
   <meta name="author" content="William Camilo">
-  <title>Currículo WCC</title>
   <link rel="stylesheet" href="CSS/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="favicon.ico">
 </head>
 <body>
+
   <!-- Header -->
   <header>
     <div class="header-content">
@@ -32,8 +34,8 @@
   </header>
 
   <!-- Robô Interativo -->
-  <div id="robot-container">
-    <div id="robot">
+  <div id="robot-container" class="robot-container">
+    <button id="robot" class="robot" aria-expanded="false" aria-controls="robot-chat" aria-label="Abrir assistente virtual">
       <div class="head">
         <div class="eyes">
           <div class="eye left"></div>
@@ -41,27 +43,28 @@
         </div>
         <div class="mouth"></div>
       </div>
-    </div>
-    <div id="robot-chat">
-      <div id="robot-message">Olá! Posso ajudar em algo?</div>
-      <div id="user-input-container">
-        <input type="text" id="user-input" placeholder="Digite sua pergunta...">
-        <button id="send-button">Enviar</button>
-      </div>
+    </button>
+
+    <div id="robot-chat" class="robot-chat">
+      <div id="robot-message" class="robot-message">Olá! Posso ajudar em algo?</div>
+      <form id="robot-form" class="input-container" autocomplete="off">
+        <input type="text" id="user-input" class="user-input" placeholder="Digite sua pergunta..." aria-label="Digite sua pergunta" required />
+        <button id="send-button" class="send-button" type="submit">Enviar</button>
+      </form>
     </div>
   </div>
 
   <!-- Conteúdo Principal -->
   <main class="container">
-    <!-- Sobre -->
+    <!-- Sobre Mim (texto original) -->
     <section id="sobre" class="section">
       <h2>Sobre Mim</h2>
-      <p>Tenho 21 anos e atualmente sou estudante de <strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> na UNIMAR. Iniciei minha trajetória acadêmica com o curso de <strong>Marketing Digital</strong>, mas optei por trancar temporariamente essa graduação para focar em minha formação em ADS. Essa decisão foi motivada pela oportunidade de aprofundar meus conhecimentos em tecnologia e desenvolvimento de sistemas, áreas que acredito serem fundamentais para a criação de soluções inovadoras e impactantes no mercado digital.</p>
+      <p>Tenho 21 anos e atualmente sou estudante de <strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> na UNIMAR. Iniciei minha trajetória acadêmica com o curso de <strong>Marketing Digital</strong>, mas optei por trancar temporariamente essa graduação para focar em minha formação em ADS. Essa decisão foi motivada pela oportunidade de aprofundar meus conhecimentos em tecnologia e desenvolvimento de sistemas, áreas que acredito serem fundamentais para a criação de soluções inovadoras e impactantes no mercado digital. </p>
       <p>Embora esteja totalmente imerso na minha jornada em ADS, planejo retomar o curso de Marketing Digital no futuro, com a intenção de integrar ambas as áreas. A combinação de um sólido entendimento em desenvolvimento de sistemas com a expertise em estratégias de marketing digital me permitirá criar soluções completas e eficientes para o ambiente online. Estou determinado a utilizar essas competências de forma colaborativa e inovadora, com o objetivo de gerar resultados positivos e de alto impacto para os negócios e a sociedade.</p>
       <p>Sou apaixonado por tecnologia, por analisar dados e por entender como as estratégias digitais podem transformar o comportamento do consumidor e as práticas empresariais. Sempre busco expandir meu conhecimento e estou comprometido em me manter atualizado sobre as tendências e inovações do mercado. Acredito que a chave para o sucesso está na adaptação constante e no trabalho colaborativo, criando um ambiente de aprendizado contínuo e desenvolvimento profissional.</p>
     </section>
 
-    <!-- Educação -->
+    <!-- Educação (texto original) -->
     <section id="educacao" class="section">
       <h2>Educação</h2>
       <div class="education-item">
@@ -69,6 +72,7 @@
         <p><strong>Tecnólogo em Marketing Digital (EaD)</strong> – trancado.</p>
         <p>Foco: economia, gestão de pessoas e estratégias online.</p>
       </div>
+      <div class="education-item"></div>
       <div class="education-item">
         <h3>UNIMAR - Universidade de Marília</h3>
         <p><strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> – Iniciado em agosto de 2024, com duração de 2 anos e meio.</p>
@@ -76,7 +80,7 @@
       </div>
     </section>
 
-    <!-- Experiência -->
+    <!-- Experiência Profissional (texto original) -->
     <section id="experiencia" class="section">
       <h2>Experiência Profissional</h2>
       <div class="experience-item">
@@ -87,7 +91,7 @@
       </div>
     </section>
 
-    <!-- Habilidades -->
+    <!-- Habilidades (texto original) -->
     <section id="habilidades" class="section">
       <h2>Habilidades</h2>
       <div class="skills-list">
@@ -99,63 +103,77 @@
       </div>
     </section>
 
-    <!-- Certificados -->
+    <!-- Certificados (texto original) -->
     <section id="certificados" class="section">
       <h2>Certificados</h2>
       <div class="certificates-list">
         <div class="certificate-item">
-          <h3><a href="https://drive.google.com/file/d/1QPGAPLdNmCJzwjImMvgFvnxbCH-nHYI_/view?usp=sharing" target="_blank">MINICURSO: COMUNICAÇÃO PARA O MERCADO DE TRABALHO - M1.2024</a></h3>
+          <h3><a href="https://drive.google.com/file/d/1QPGAPLdNmCJzwjImMvgFvnxbCH-nHYI_/view?usp=sharing" target="_blank" rel="noopener noreferrer">MINICURSO: COMUNICAÇÃO PARA O MERCADO DE TRABALHO - M1.2024</a></h3>
         </div>
         <div class="certificate-item">
-          <h3><a href="https://drive.google.com/file/d/14CvmZ6gVt35ndEKCdSLSU_8LkOdQuwwZ/view?usp=sharing" target="_blank">2° CONFESTDEV MARÍLIA 2024 (EVENTO DA GOOGLE DEVELOPER GROUPS)</a></h3>
+          <h3><a href="https://drive.google.com/file/d/14CvmZ6gVt35ndEKCdSLSU_8LkOdQuwwZ/view?usp=sharing" target="_blank" rel="noopener noreferrer">2° CONFESTDEV MARÍLIA 2024 (EVENTO DA GOOGLE DEVELOPER GROUPS)</a></h3>
         </div>
         <div class="certificate-item">
-          <h3><a href="https://drive.google.com/file/d/13cRC3L6tsn0jayWVTLtPb7fsxL5-JLgk/view?usp=sharing" target="_blank">MINICURSO: INTELIGÊNCIA EMOCIONAL - M1.2024</a></h3>
+          <h3><a href="https://drive.google.com/file/d/13cRC3L6tsn0jayWVTLtPb7fsxL5-JLgk/view?usp=sharing" target="_blank" rel="noopener noreferrer">MINICURSO: INTELIGÊNCIA EMOCIONAL - M1.2024</a></h3>
         </div>
         <div class="certificate-item">
-          <h3><a href="https://drive.google.com/file/d/1x3Lc_sKIQlTwNzCF18WbyJRLmpowE_EH/view?usp=sharing" target="_blank">MINICURSO: FINANÇAS PESSOAIS - M1.2024</a></h3>
+          <h3><a href="https://drive.google.com/file/d/1x3Lc_sKIQlTwNzCF18WbyJRLmpowE_EH/view?usp=sharing" target="_blank" rel="noopener noreferrer">MINICURSO: FINANÇAS PESSOAIS - M1.2024</a></h3>
         </div>
         <div class="certificate-item">
-          <h3><a href="#" target="_blank">MINICURSO: APERFEIÇOAMENTO PEDAGÓGICO EM INFORMÁTICA M1.2024</a></h3>
+          <h3><a href="#" target="_blank" rel="noopener noreferrer">MINICURSO: APERFEIÇOAMENTO PEDAGÓGICO EM INFORMÁTICA M1.2024</a></h3>
         </div>
       </div>
     </section>
 
-    <!-- Contato -->
+    <!-- Contato (texto original) -->
     <section id="contato" class="section">
       <h2>Contato</h2>
-      <form id="contact-form">
+      <form id="contact-form" novalidate>
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" required>
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
         <label for="mensagem">Mensagem:</label>
         <textarea id="mensagem" name="mensagem" rows="4" required></textarea>
+
+        <!-- Honeypot anti-spam (usado pelo scripts.js) -->
+        <div class="sr-only" aria-hidden="true">
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
         <button type="submit">Enviar</button>
       </form>
       <p id="form-status"></p>
       <p><strong>Telefone:</strong> <a href="tel:+5514991185465">(14) 99118-5465</a></p>
       <p>Siga-me nas redes sociais:</p>
       <div class="social-links">
-        <a href="https://www.linkedin.com/in/william-camilo-636b69229/" target="_blank">
+        <a href="https://www.linkedin.com/in/william-camilo-636b69229/" target="_blank" rel="noopener noreferrer">
           <img src="images/linkedin-icon.png" alt="LinkedIn">
         </a>
-        <a href="https://github.com/williamcamilll" target="_blank">
+        <a href="https://github.com/williamcamilll" target="_blank" rel="noopener noreferrer">
           <img src="images/github-icon.png" alt="GitHub">
         </a>
       </div>
     </section>
 
-    <!-- Feedback -->
+    <!-- Feedback (texto original) -->
     <section id="feedback" class="section">
       <h2>Deixe seu Feedback</h2>
-      <form id="feedback-form">
+      <form id="feedback-form" novalidate>
         <label for="nome-feedback">Nome:</label>
         <input type="text" id="nome-feedback" name="nome" required>
         <label for="email-feedback">Email:</label>
         <input type="email" id="email-feedback" name="email" required>
         <label for="comentario">Comentário:</label>
         <textarea id="comentario" name="comentario" rows="4" placeholder="Deixe aqui seu feedback ou sugestões..." required></textarea>
+
+        <!-- Honeypot anti-spam (usado pelo scripts.js) -->
+        <div class="sr-only" aria-hidden="true">
+          <label for="website">Website</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
         <button type="submit">Enviar Feedback</button>
       </form>
       <p id="feedback-status"></p>
@@ -168,9 +186,10 @@
     <p>Desenvolvido por William Camilo</p>
   </footer>
 
-  <!-- Botão Topo -->
-  <button class="back-to-top" title="Voltar ao Topo">&uarr;</button>
+  <!-- Botão de Voltar ao Topo -->
+  <button class="back-to-top" title="Voltar ao Topo" aria-label="Voltar ao Topo" hidden>&uarr;</button>
 
+  <!-- Scripts -->
   <script src="scripts/scripts.js"></script>
 </body>
 </html>
