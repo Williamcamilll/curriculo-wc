@@ -1,7 +1,7 @@
 /* =========================================================
-   WCC — Aurora Minimal v3
+   WCC — Aurora Minimal v4 (com header novo “glass”)
    Visual limpo, acessível, responsivo e com temas
-   (compatível com o index.html e scripts.js desta conversa)
+   Compatível com o index.html + scripts.js desta conversa
 ========================================================= */
 
 /* ---------- Design Tokens ---------- */
@@ -16,7 +16,7 @@
   --text:#e5eef6;
   --muted:#9fb0bf;
 
-  /* Acento (troque para personalizar a “personalidade”) */
+  /* Acento (mude para personalizar) */
   --accent:#7dd3fc;   /* ciano suave */
   --accent-2:#22d3ee; /* ciano forte (hover) */
   --danger:#ef476f;
@@ -84,7 +84,6 @@ a{color:var(--accent); text-decoration:none}
 a:hover{color:var(--accent-2); text-decoration:underline; text-underline-offset:3px}
 :focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:.35rem}
 .using-mouse :focus{outline:none}
-
 img{max-width:100%; height:auto; display:block}
 
 /* Scrollbar (webkit) */
@@ -97,41 +96,142 @@ img{max-width:100%; height:auto; display:block}
   overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
 }
 
-/* ---------- Header ---------- */
-header{
-  position:sticky; top:0; z-index:50;
-  backdrop-filter:saturate(115%) blur(10px);
-  background:color-mix(in srgb, var(--bg) 75%, transparent);
-  border-bottom:1px solid var(--line);
+/* =========================================================
+   HEADER “GLASS” (novo)
+========================================================= */
+.site-header{
+  position: sticky; top: 0; z-index: 60;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(12px) saturate(120%);
 }
-.header-content{
-  max-width:var(--container-max); margin:0 auto; padding:var(--sp-6) var(--sp-4) var(--sp-4);
-  display:flex; flex-direction:column; align-items:center; gap:.5rem;
-}
-header h1{margin:0; font-size:var(--fs-900); font-weight:700; letter-spacing:.02em}
-header p{margin:0; color:var(--muted); font-size:var(--fs-600)}
-header nav{margin-top:var(--sp-4)}
-header nav ul{margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:.5rem}
-header nav a{
-  display:inline-block; padding:.55rem .85rem; font-size:var(--fs-500);
-  color:var(--text); border:1px solid var(--line); border-radius:999px;
-  transition:background var(--t-norm), border-color var(--t-norm), color var(--t-norm), transform var(--t-fast);
-}
-header nav a:hover{
-  background:var(--surface-2);
-  border-color:color-mix(in srgb, var(--accent) 35%, var(--line));
-  transform:translateY(-1px)
-}
-header nav a.active{
-  background:color-mix(in srgb, var(--accent) 16%, var(--surface));
-  border-color:color-mix(in srgb, var(--accent) 40%, var(--line));
-  color:var(--text)
+.site-header .shell{
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: .9rem var(--sp-4);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 1rem;
 }
 
-/* Relógio */
-#clock{margin:.4rem 0 var(--sp-4); color:var(--muted); font-size:var(--fs-500)}
+/* Marca */
+.brand{
+  display: grid; grid-auto-flow: column; align-items: center; gap: .75rem;
+  text-decoration: none; color: var(--text);
+}
+.brand-mark{
+  width: 42px; height: 42px; border-radius: 12px;
+  display: grid; place-items: center;
+  font-weight: 800; letter-spacing: .5px;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--accent) 45%, transparent),
+    color-mix(in srgb, var(--accent-2) 45%, transparent));
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  box-shadow: var(--shadow-sm);
+}
+.brand-text{display:flex; flex-direction:column; line-height:1.1}
+.brand-text strong{font-size: clamp(1.05rem, 1.2vw + .6rem, 1.25rem)}
+.brand-text small{color: var(--muted); font-size: .85rem}
 
-/* ---------- Layout & Seções ---------- */
+/* Toggle mobile (checkbox hack) */
+.nav-toggle{position:absolute; opacity:0; pointer-events:none}
+.hamburger{
+  width: 42px; height: 42px; border-radius: 12px; display: none;
+  place-items: center; border:1px solid var(--line); cursor: pointer;
+  background: var(--surface); box-shadow: var(--shadow-sm);
+}
+.hamburger span{
+  display:block; width:22px; height:2px; background:var(--text);
+  border-radius:3px; transition:.25s var(--easing);
+}
+.hamburger span + span{margin-top:5px}
+.nav-toggle:checked + .hamburger span:nth-child(1){transform: translateY(7px) rotate(45deg)}
+.nav-toggle:checked + .hamburger span:nth-child(2){opacity:0}
+.nav-toggle:checked + .hamburger span:nth-child(3){transform: translateY(-7px) rotate(-45deg)}
+
+/* Nav */
+.main-nav{
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: end;
+  align-items: center;
+  gap: 1rem;
+}
+.main-nav ul{
+  display:flex; flex-wrap:wrap; gap:.5rem; margin:0; padding:0; list-style:none;
+}
+.pill{
+  display:inline-block; padding:.55rem .85rem; font-size: var(--fs-500);
+  color: var(--text); text-decoration:none;
+  border:1px solid var(--line); border-radius: 999px;
+  position: relative; transition: border-color var(--t-norm), transform var(--t-fast), background var(--t-norm);
+}
+.pill::after{
+  content:''; position:absolute; left:12px; right:12px; bottom:7px; height:2px;
+  background: color-mix(in srgb, var(--accent) 55%, transparent);
+  transform: scaleX(0); transform-origin: left; transition: transform .25s var(--easing);
+  border-radius: 2px;
+}
+.pill:hover{transform: translateY(-1px); background: var(--surface-2); border-color: color-mix(in srgb, var(--accent) 35%, var(--line))}
+.pill:hover::after{transform: scaleX(1)}
+/* integração com link ativo marcado pelo scripts.js */
+header nav a.active,
+.main-nav a.active{
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+}
+
+/* CTAs à direita */
+.header-cta{display:flex; gap:.6rem; align-items:center}
+.btn{
+  display:inline-block; padding:.65rem .9rem; border-radius:12px;
+  font-weight:700; letter-spacing:.01em; color:var(--text);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--accent) 35%, transparent),
+    color-mix(in srgb, var(--accent-2) 45%, transparent));
+  border:1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  box-shadow: var(--shadow-sm); text-decoration:none;
+  transition: transform var(--t-fast), filter var(--t-norm), box-shadow var(--t-norm);
+}
+.btn:hover{transform: translateY(-1px); filter: brightness(1.05); box-shadow: var(--shadow-md)}
+.btn-ghost{
+  background: var(--surface);
+  border:1px solid var(--line);
+}
+
+/* Relógio sob a barra */
+.header-clock{
+  max-width: var(--container-max);
+  margin: 0 auto; padding: .25rem var(--sp-4) .6rem;
+  color: var(--muted); font-size: .95rem;
+}
+
+/* -------- Responsivo do header -------- */
+@media (max-width: 980px){
+  .hamburger{display:grid}
+  .main-nav{
+    grid-auto-flow: row;
+    justify-content: stretch; justify-items: stretch;
+    gap: .75rem;
+
+    /* menu colapsável */
+    max-height: 0; opacity: 0; overflow: hidden;
+    transition: max-height .35s var(--easing), opacity .3s var(--easing);
+    grid-column: 1 / -1;
+    margin-top: .5rem;
+    padding: 0 var(--sp-2);
+  }
+  .nav-toggle:checked ~ .main-nav{
+    max-height: 480px; opacity: 1; padding-bottom: .75rem;
+  }
+  .main-nav ul{justify-content: flex-start}
+  .header-cta{justify-content: flex-start}
+}
+
+/* =========================================================
+   LAYOUT & SEÇÕES
+========================================================= */
 .container{max-width:var(--container-max); width:92%; margin:var(--sp-8) auto}
 .section{
   background:var(--card); border:1px solid var(--line); border-radius:16px;
@@ -156,7 +256,9 @@ h2{
 .education-item + .education-item,.experience-item + .experience-item{margin-top:.9rem}
 .education-item h3,.experience-item h3{margin:.2rem 0 .4rem; font-size:var(--fs-700)}
 
-/* ---------- Skills ---------- */
+/* =========================================================
+   SKILLS
+========================================================= */
 .skills-list{
   display:grid; gap:.9rem; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
 }
@@ -167,7 +269,9 @@ h2{
 }
 .skill-card:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
 
-/* ---------- Certificados ---------- */
+/* =========================================================
+   CERTIFICADOS
+========================================================= */
 .certificates-list{display:grid; gap:.8rem}
 .certificate-item{
   background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:.9rem 1rem;
@@ -179,12 +283,14 @@ h2{
 .certificate-item a:hover{text-decoration:underline}
 
 /* Links discretos dentro das seções */
-.section a:not(.send-button){
+.section a:not(.btn):not(.pill){
   text-decoration:none; border-bottom:1px dashed color-mix(in srgb, var(--accent) 35%, transparent);
 }
-.section a:not(.send-button):hover{border-bottom-color:var(--accent-2)}
+.section a:not(.btn):not(.pill):hover{border-bottom-color:var(--accent-2)}
 
-/* ---------- Formulários ---------- */
+/* =========================================================
+   FORMULÁRIOS
+========================================================= */
 form{display:grid; gap:.85rem}
 label{color:var(--muted); font-weight:500}
 input,textarea{
@@ -206,7 +312,9 @@ button:hover{transform:translateY(-1px); filter:brightness(1.05); box-shadow:var
 button:disabled{opacity:.6; cursor:not-allowed}
 #form-status,#feedback-status{min-height:1.25rem}
 
-/* ---------- Redes Sociais ---------- */
+/* =========================================================
+   REDES SOCIAIS
+========================================================= */
 .social-links{display:flex; gap:.6rem; flex-wrap:wrap; align-items:center}
 .social-links a{
   --size:42px; width:var(--size); height:var(--size); display:grid; place-items:center;
@@ -216,7 +324,9 @@ button:disabled{opacity:.6; cursor:not-allowed}
 .social-links a:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
 .social-links img{width:22px; height:22px}
 
-/* ---------- Footer ---------- */
+/* =========================================================
+   FOOTER
+========================================================= */
 footer{
   margin-top:var(--sp-8);
   border-top:1px solid var(--line);
@@ -225,7 +335,9 @@ footer{
 }
 footer p{margin:.7rem 0; text-align:center; color:var(--muted)}
 
-/* ---------- Back to Top ---------- */
+/* =========================================================
+   BACK TO TOP
+========================================================= */
 .back-to-top{
   position:fixed; bottom:22px; right:22px; z-index:40;
   width:46px; height:46px; border-radius:12px; border:1px solid var(--line);
@@ -235,7 +347,9 @@ footer p{margin:.7rem 0; text-align:center; color:var(--muted)}
 .back-to-top:hover{transform:translateY(-2px); border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
 .visible{opacity:1} .invisible{opacity:0}
 
-/* ---------- Robô ---------- */
+/* =========================================================
+   ROBÔ (bot)
+========================================================= */
 .robot-container{position:fixed; bottom:28px; right:28px; z-index:45; display:grid; gap:.5rem}
 #robot{
   width:88px; height:88px; border-radius:14px; border:1px solid var(--line);
@@ -272,17 +386,16 @@ footer p{margin:.7rem 0; text-align:center; color:var(--muted)}
 }
 .send-button:hover{border-color:color-mix(in srgb, var(--accent) 30%, var(--line))}
 
-/* ---------- Acessibilidade extra ---------- */
+/* Acessibilidade extra */
 [hidden]{display:none!important}
 
-/* ---------- Responsividade ---------- */
+/* =========================================================
+   RESPONSIVIDADE GERAL
+========================================================= */
 @media (max-width:1024px){
-  header h1{font-size:clamp(1.9rem, 3vw + 1rem, 2.5rem)}
   .container{width:92%}
 }
 @media (max-width:768px){
-  header nav ul{justify-content:center}
-  header nav a{padding:.5rem .75rem}
   .skills-list{grid-template-columns:1fr}
   #robot{width:80px;height:80px}
   #robot-chat{width:min(88vw, 320px)}
@@ -292,10 +405,13 @@ footer p{margin:.7rem 0; text-align:center; color:var(--muted)}
   h2{font-size:1.35rem}
 }
 
-/* ---------- High Contrast refinado ---------- */
+/* =========================================================
+   HIGH CONTRAST
+========================================================= */
 .theme-contrast *{outline-color:#00ffe0}
 .theme-contrast .section,
 .theme-contrast .education-item,
 .theme-contrast .experience-item,
 .theme-contrast .certificate-item{border-width:2px}
+
 
