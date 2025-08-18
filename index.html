@@ -1,58 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="auto-theme">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
-  <!-- SEO básico preservando sua proposta -->
-  <meta name="description" content="Portfólio de William Camilo, estudante de Marketing Digital e Análise e Desenvolvimento de Sistemas (ADS), focado em tecnologia e estratégias digitais." />
-  <meta name="keywords" content="William Camilo, Curriculo, Marketing Digital, Análise e Desenvolvimento de Sistemas, (ADS), Tecnologia" />
-  <meta name="author" content="William Camilo" />
-  <meta name="theme-color" content="#0ea5e9" />
-
-  <title>Curriculo WCC</title>
-
-  <!-- Favicon / fontes -->
-  <link rel="icon" href="favicon.ico" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="CSS/style.css" />
-
-  <!-- Open Graph (opcional, sem alterar seu conteúdo) -->
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="pt_BR" />
-  <meta property="og:title" content="Curriculo WCC" />
-  <meta property="og:description" content="Portfólio de William Camilo — ADS e Marketing Digital." />
-  <meta property="og:image" content="images/cover.jpg" />
-  <meta property="og:url" content="https://seu-dominio.exemplo/" />
-
-  <!-- JSON-LD simples sem mexer no texto das seções -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Person",
-    "name":"William Camilo",
-    "alternateName":"WCC",
-    "url":"https://seu-dominio.exemplo/",
-    "sameAs":[
-      "https://www.linkedin.com/in/william-camilo-636b69229/",
-      "https://github.com/williamcamilll"
-    ]
-  }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfólio de William Camilo, estudante de Marketing Digital e ADS.">
+  <meta name="author" content="William Camilo">
+  <title>Currículo WCC</title>
+  <link rel="stylesheet" href="CSS/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.ico">
 </head>
 <body>
-  <a href="#conteudo-principal" class="sr-only">Ir para o conteúdo principal</a>
-
   <!-- Header -->
-  <header role="banner">
+  <header>
     <div class="header-content">
       <h1>William Camilo</h1>
       <p>ADS e Marketing | <strong>WCC</strong></p>
-      <nav aria-label="Navegação principal">
+      <nav>
         <ul>
           <li><a href="#sobre">Sobre</a></li>
           <li><a href="#educacao">Educação</a></li>
@@ -64,54 +28,47 @@
         </ul>
       </nav>
     </div>
-    <div id="clock" aria-live="polite" aria-atomic="true" title="Horário de Brasília"></div>
+    <div id="clock"></div>
   </header>
 
-  <!-- Robô Interativo com IA (estrutura original preservada) -->
-  <div id="robot-container" class="robot-container" aria-live="polite">
-    <button id="robot" class="robot" aria-expanded="false" aria-controls="robot-chat" aria-label="Abrir assistente virtual">
-      <div class="head" aria-hidden="true">
+  <!-- Robô Interativo -->
+  <div id="robot-container">
+    <div id="robot">
+      <div class="head">
         <div class="eyes">
           <div class="eye left"></div>
           <div class="eye right"></div>
         </div>
         <div class="mouth"></div>
       </div>
-      <div class="body" aria-hidden="true"></div>
-    </button>
-
-    <div id="robot-chat" class="robot-chat" role="dialog" aria-modal="false" aria-labelledby="robot-message">
-      <div id="robot-message" class="robot-message">Olá! Posso ajudar em algo?</div>
-      <div id="user-input-container" class="input-container">
-        <label for="user-input" class="sr-only">Digite sua pergunta</label>
-        <input type="text" id="user-input" class="user-input" placeholder="Digite sua pergunta..." aria-label="Digite sua pergunta" />
-        <button id="send-button" class="send-button" aria-label="Enviar pergunta">Enviar</button>
+    </div>
+    <div id="robot-chat">
+      <div id="robot-message">Olá! Posso ajudar em algo?</div>
+      <div id="user-input-container">
+        <input type="text" id="user-input" placeholder="Digite sua pergunta...">
+        <button id="send-button">Enviar</button>
       </div>
     </div>
   </div>
 
   <!-- Conteúdo Principal -->
-  <main id="conteudo-principal" class="container">
-    <!-- Seção Sobre Mim (TEXTO ORIGINAL MANTIDO) -->
-    <section id="sobre" class="section" aria-labelledby="titulo-sobre">
-      <h2 id="titulo-sobre">Sobre Mim</h2>
-      <p>Tenho 21 anos e atualmente sou estudante de <strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> na UNIMAR. Iniciei minha trajetória acadêmica com o curso de <strong>Marketing Digital</strong>, mas optei por trancar temporariamente essa graduação para focar em minha formação em ADS. Essa decisão foi motivada pela oportunidade de aprofundar meus conhecimentos em tecnologia e desenvolvimento de sistemas, áreas que acredito serem fundamentais para a criação de soluções inovadoras e impactantes no mercado digital. </p>
+  <main class="container">
+    <!-- Sobre -->
+    <section id="sobre" class="section">
+      <h2>Sobre Mim</h2>
+      <p>Tenho 21 anos e atualmente sou estudante de <strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> na UNIMAR. Iniciei minha trajetória acadêmica com o curso de <strong>Marketing Digital</strong>, mas optei por trancar temporariamente essa graduação para focar em minha formação em ADS. Essa decisão foi motivada pela oportunidade de aprofundar meus conhecimentos em tecnologia e desenvolvimento de sistemas, áreas que acredito serem fundamentais para a criação de soluções inovadoras e impactantes no mercado digital.</p>
       <p>Embora esteja totalmente imerso na minha jornada em ADS, planejo retomar o curso de Marketing Digital no futuro, com a intenção de integrar ambas as áreas. A combinação de um sólido entendimento em desenvolvimento de sistemas com a expertise em estratégias de marketing digital me permitirá criar soluções completas e eficientes para o ambiente online. Estou determinado a utilizar essas competências de forma colaborativa e inovadora, com o objetivo de gerar resultados positivos e de alto impacto para os negócios e a sociedade.</p>
       <p>Sou apaixonado por tecnologia, por analisar dados e por entender como as estratégias digitais podem transformar o comportamento do consumidor e as práticas empresariais. Sempre busco expandir meu conhecimento e estou comprometido em me manter atualizado sobre as tendências e inovações do mercado. Acredito que a chave para o sucesso está na adaptação constante e no trabalho colaborativo, criando um ambiente de aprendizado contínuo e desenvolvimento profissional.</p>
     </section>
 
-    <!-- Seção Educação (TEXTO ORIGINAL MANTIDO) -->
-    <section id="educacao" class="section" aria-labelledby="titulo-educacao">
-      <h2 id="titulo-educacao">Educação</h2>
-
+    <!-- Educação -->
+    <section id="educacao" class="section">
+      <h2>Educação</h2>
       <div class="education-item">
         <h3>UNIMAR - Universidade de Marília</h3>
         <p><strong>Tecnólogo em Marketing Digital (EaD)</strong> – trancado.</p>
         <p>Foco: economia, gestão de pessoas e estratégias online.</p>
       </div>
-
-      <div class="education-item"></div>
-
       <div class="education-item">
         <h3>UNIMAR - Universidade de Marília</h3>
         <p><strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> – Iniciado em agosto de 2024, com duração de 2 anos e meio.</p>
@@ -119,9 +76,9 @@
       </div>
     </section>
 
-    <!-- Seção Experiência Profissional (TEXTO ORIGINAL MANTIDO) -->
-    <section id="experiencia" class="section" aria-labelledby="titulo-experiencia">
-      <h2 id="titulo-experiencia">Experiência Profissional</h2>
+    <!-- Experiência -->
+    <section id="experiencia" class="section">
+      <h2>Experiência Profissional</h2>
       <div class="experience-item">
         <h3>Paschoalotto - Operador de Cobrança (Call Center)</h3>
         <p><strong>Início:</strong> 09/01/2025</p>
@@ -130,9 +87,9 @@
       </div>
     </section>
 
-    <!-- Seção Habilidades (TEXTO ORIGINAL MANTIDO) -->
-    <section id="habilidades" class="section" aria-labelledby="titulo-habilidades">
-      <h2 id="titulo-habilidades">Habilidades</h2>
+    <!-- Habilidades -->
+    <section id="habilidades" class="section">
+      <h2>Habilidades</h2>
       <div class="skills-list">
         <div class="skill-card">Gestao pessoas</div>
         <div class="skill-card">atendimente ao cliente</div>
@@ -142,98 +99,79 @@
       </div>
     </section>
 
-    <!-- Seção Certificados (TEXTO ORIGINAL MANTIDO — corrigido href vazio) -->
-    <section id="certificados" class="section" aria-labelledby="titulo-certificados">
-      <h2 id="titulo-certificados">Certificados</h2>
+    <!-- Certificados -->
+    <section id="certificados" class="section">
+      <h2>Certificados</h2>
       <div class="certificates-list">
         <div class="certificate-item">
-          <h3><a href="https://drive.google.com/file/d/1QPGAPLdNmCJzwjImMvgFvnxbCH-nHYI_/view?usp=sharing" target="_blank" rel="noopener noreferrer">MINICURSO: COMUNICAÇÃO PARA O MERCADO DE TRABALHO - M1.2024</a></h3>
+          <h3><a href="https://drive.google.com/file/d/1QPGAPLdNmCJzwjImMvgFvnxbCH-nHYI_/view?usp=sharing" target="_blank">MINICURSO: COMUNICAÇÃO PARA O MERCADO DE TRABALHO - M1.2024</a></h3>
         </div>
         <div class="certificate-item">
-          <h3><a href="https://drive.google.com/file/d/14CvmZ6gVt35ndEKCdSLSU_8LkOdQuwwZ/view?usp=sharing" target="_blank" rel="noopener noreferrer">2° CONFESTDEV MARÍLIA 2024 (EVENTO DA GOOGLE DEVELOPER GROUPS)</a></h3>
+          <h3><a href="https://drive.google.com/file/d/14CvmZ6gVt35ndEKCdSLSU_8LkOdQuwwZ/view?usp=sharing" target="_blank">2° CONFESTDEV MARÍLIA 2024 (EVENTO DA GOOGLE DEVELOPER GROUPS)</a></h3>
         </div>
         <div class="certificate-item">
-          <h3><a href="https://drive.google.com/file/d/13cRC3L6tsn0jayWVTLtPb7fsxL5-JLgk/view?usp=sharing" target="_blank" rel="noopener noreferrer">MINICURSO: INTELIGÊNCIA EMOCIONAL - M1.2024</a></h3>
+          <h3><a href="https://drive.google.com/file/d/13cRC3L6tsn0jayWVTLtPb7fsxL5-JLgk/view?usp=sharing" target="_blank">MINICURSO: INTELIGÊNCIA EMOCIONAL - M1.2024</a></h3>
         </div>
         <div class="certificate-item">
-          <h3><a href="https://drive.google.com/file/d/1x3Lc_sKIQlTwNzCF18WbyJRLmpowE_EH/view?usp=sharing" target="_blank" rel="noopener noreferrer">MINICURSO: FINANÇAS PESSOAIS - M1.2024</a></h3>
+          <h3><a href="https://drive.google.com/file/d/1x3Lc_sKIQlTwNzCF18WbyJRLmpowE_EH/view?usp=sharing" target="_blank">MINICURSO: FINANÇAS PESSOAIS - M1.2024</a></h3>
         </div>
         <div class="certificate-item">
-          <!-- apenas completei o href que estava vazio, mantendo o mesmo título -->
-          <h3><a href="https://drive.google.com/" target="_blank" rel="noopener noreferrer">MINICURSO: APERFEIÇOAMENTO PEDAGÓGICO EM INFORMÁTICA M1.2024</a></h3>
+          <h3><a href="#" target="_blank">MINICURSO: APERFEIÇOAMENTO PEDAGÓGICO EM INFORMÁTICA M1.2024</a></h3>
         </div>
       </div>
     </section>
 
-    <!-- Seção Contato (TEXTO ORIGINAL MANTIDO) -->
-    <section id="contato" class="section" aria-labelledby="titulo-contato">
-      <h2 id="titulo-contato">Contato</h2>
-      <form id="contact-form" novalidate>
+    <!-- Contato -->
+    <section id="contato" class="section">
+      <h2>Contato</h2>
+      <form id="contact-form">
         <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required />
+        <input type="text" id="nome" name="nome" required>
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
+        <input type="email" id="email" name="email" required>
         <label for="mensagem">Mensagem:</label>
         <textarea id="mensagem" name="mensagem" rows="4" required></textarea>
-
-        <!-- Honeypot oculto para anti-spam (não altera seu texto) -->
-        <div class="sr-only" aria-hidden="true">
-          <label for="company">Company</label>
-          <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
-        </div>
-
         <button type="submit">Enviar</button>
       </form>
-      <p id="form-status" role="status" aria-live="polite"></p>
-
+      <p id="form-status"></p>
       <p><strong>Telefone:</strong> <a href="tel:+5514991185465">(14) 99118-5465</a></p>
       <p>Siga-me nas redes sociais:</p>
       <div class="social-links">
-        <a href="https://www.linkedin.com/in/william-camilo-636b69229/" target="_blank" rel="noopener noreferrer">
-          <img src="images/linkedin-icon.png" alt="LinkedIn" width="28" height="28" loading="lazy" />
+        <a href="https://www.linkedin.com/in/william-camilo-636b69229/" target="_blank">
+          <img src="images/linkedin-icon.png" alt="LinkedIn">
         </a>
-        <a href="https://github.com/williamcamilll" target="_blank" rel="noopener noreferrer">
-          <img src="images/github-icon.png" alt="GitHub" width="28" height="28" loading="lazy" />
+        <a href="https://github.com/williamcamilll" target="_blank">
+          <img src="images/github-icon.png" alt="GitHub">
         </a>
       </div>
     </section>
 
-    <!-- Seção de Feedback (TEXTO ORIGINAL MANTIDO) -->
-    <section id="feedback" class="section" aria-labelledby="titulo-feedback">
-      <h2 id="titulo-feedback">Deixe seu Feedback</h2>
-      <form id="feedback-form" novalidate>
+    <!-- Feedback -->
+    <section id="feedback" class="section">
+      <h2>Deixe seu Feedback</h2>
+      <form id="feedback-form">
         <label for="nome-feedback">Nome:</label>
-        <input type="text" id="nome-feedback" name="nome" required />
+        <input type="text" id="nome-feedback" name="nome" required>
         <label for="email-feedback">Email:</label>
-        <input type="email" id="email-feedback" name="email" required />
+        <input type="email" id="email-feedback" name="email" required>
         <label for="comentario">Comentário:</label>
         <textarea id="comentario" name="comentario" rows="4" placeholder="Deixe aqui seu feedback ou sugestões..." required></textarea>
-
-        <!-- Honeypot oculto -->
-        <div class="sr-only" aria-hidden="true">
-          <label for="website">Website</label>
-          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
-        </div>
-
         <button type="submit">Enviar Feedback</button>
       </form>
-      <p id="feedback-status" role="status" aria-live="polite"></p>
+      <p id="feedback-status"></p>
     </section>
   </main>
 
-  <!-- Footer (TEXTO ORIGINAL MANTIDO) -->
-  <footer role="contentinfo">
+  <!-- Footer -->
+  <footer>
     <p>&copy; 2025 WCC. Todos os direitos reservados.</p>
     <p>Desenvolvido por William Camilo</p>
   </footer>
 
-  <!-- Botão de Voltar ao Topo -->
-  <button class="back-to-top" title="Voltar ao Topo" aria-label="Voltar ao topo" hidden>&uarr;</button>
+  <!-- Botão Topo -->
+  <button class="back-to-top" title="Voltar ao Topo">&uarr;</button>
 
-  <!-- Scripts -->
-  <script src="scripts/scripts.js" defer></script>
-
-  <noscript>Ative o JavaScript para a melhor experiência.</noscript>
+  <script src="scripts/scripts.js"></script>
 </body>
 </html>
 
